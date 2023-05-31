@@ -1,0 +1,266 @@
+html {
+    font-size: 14px;
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+.register-link {
+    color: white;
+}
+
+    .register-link:hover {
+        color: #ffc107;
+    }
+
+.privacy-footer {
+    color: white;
+}
+
+    .privacy-footer:hover {
+        color: #ffc107;
+    }
+
+.form-popup {
+    display: none;
+}
+
+.dark {
+    background: #110f16;
+}
+
+.dark-card {
+    background-color: #2a2a2a;
+}
+
+.postcard-image {
+    max-height: 100%;
+    object-fit: cover;
+    position: relative;
+}
+
+.postcard-bar {
+    width: 100px;
+    height: 4px;
+    margin: 10px 0;
+    border-radius: 5px;
+    background-color: #ffc107;
+    transition: width 0.2s ease;
+}
+
+.postcard:hover .postcard-bar {
+    width: 200px;
+}
+
+.postcard-header {
+    color: white;
+}
+
+.postcard:hover .postcard-header {
+    color: #ffc107;
+}
+
+
+
+.postcard {
+    flex-wrap: wrap;
+    display: flex;
+    box-shadow: 0 4px 21px -12px rgba(0, 0, 0, 0.66);
+    border-radius: 10px;
+    margin: 0 0 2rem 0;
+    overflow: hidden;
+    position: relative;
+    color: #ffffff;
+    background: linear-gradient(-70deg, #424242, transparent 50%);
+}
+
+.menucard {
+    flex-wrap: wrap;
+    box-shadow: 0 4px 21px -12px rgba(0, 0, 0, 0.66);
+    border-radius: 10px;
+    /*  margin: 0 0 2rem 0;*/
+    overflow: hidden;
+    position: relative;
+    color: #ffffff;
+    background: linear-gradient(-70deg, #424242, transparent 50%);
+}
+
+.hide-on-small-screen {
+    display: none;
+}
+
+@media (min-width: 800px) {
+    .hide-on-small-screen {
+        display: block;
+    }
+}
+
+.subcatlink {
+    color: white;
+}
+
+    .subcatlink:hover {
+        color: #ffc107;
+    }
+
+.postcard-text {
+    padding: 1.5rem;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.report:hover {
+    cursor: pointer;
+}
+
+.new-thread-btn {
+    margin-left: 8px;
+}
+
+.header-bar {
+    width: 150px;
+    height: 2px;
+    margin: 10px 0;
+    border-radius: 5px;
+    background-color: #ffc107;
+}
+
+.post-image {
+    width: 70%;
+}
+
+@media(min-width:960px) {
+    .post-image {
+        width: 50%;
+    }
+}
+
+.custom-image {
+    width: 70px;
+    height: auto;
+}
+
+.manage-link {
+    color: white;
+}
+
+    .manage-link:hover {
+        color: #ffc107;
+    }
+
+#profile.active, #email.active, #change-password.active, #personal-data.active {
+    background-color: #ffc107;
+    color: black;
+}
+
+
+.message-card {
+    max-width: 50rem;
+}
+
+
+.banner {
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+}
+
+    .banner img {
+        width: 100%;
+        height: auto;
+    }
+
+.banner-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: #ffffff;
+}
+
+.banner-info-text{
+    font-size:1.5rem;
+}
+
+@media (max-width: 850px) {
+    .banner-info-text, .banner-btn {
+        display: none;
+    }
+}
+
+
+
+
+.article-image {
+    height: 15rem;
+    width: auto;
+}
+
+.quote {
+    height: 50vh;
+    background-color: #d0bbbb
+}
+
+.quote-mark {
+    font-size: 2.9rem;
+}
+
+.firstpage-bar {
+    width: 150px;
+    height: 2px;
+    margin: 10px 0;
+    border-radius: 5px;
+    background-color: #e1dede;
+}
+
+.firstpage-header-bar {
+    width: 250px;
+    height: 2px;
+    margin: 10px 0;
+    border-radius: 5px;
+    background-color: #e1dede;
+}
+
+.text-header{
+    color: #b09191;
+}
+.btn-header {
+    background-color: #b09191;
+}
+.zoom-text:hover {
+    transform: scale(1.1);
+}
+
+.equal-height-row {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.column-content {
+    display: flex;
+    flex-direction: column;
+}
+
+    .column-content .card {
+        flex-grow: 1;
+    }
+
+
+    footer{
+        min-height: 50vh;
+    }

@@ -1,0 +1,95 @@
+﻿@page
+@model WomensTechForum2._0.Pages.Admin.RoleAdmin.IndexModel
+@{
+}
+
+<div class="container py-2">
+<h1>Roller</h1>
+
+<div>
+    <h3>Befintliga roller:</h3>
+    @if (Model.Roles != null && Model.Roles.Any())
+    {
+        @foreach (var role in Model.Roles)
+        {
+            <p>- @role.Name</p>
+        }
+    }
+
+    <div>
+        <form method="post">
+            <label for="RoleName">Ny roll</label>
+            <input name="RoleName" id="RoleName" />
+            <input class="btn btn-success btn-sm" type="submit" value="Skapa ny roll">
+        </form>
+    </div>
+</div>
+
+<div>
+    <hr />
+    <h3>Befintliga användare:</h3>
+    @if (Model.Users != null && Model.Users.Any())
+    {
+        <table class="table">
+
+            <tr>
+                <th>Username</th>
+                @foreach (var role in Model.Roles)
+                {
+                    <th>@role.Name</th>
+                }
+            </tr>
+            @foreach (var user in Model.Users)
+            {
+                <tr>
+                    <td>@user.UserName</td>
+
+                    @foreach (var role in Model.Roles)
+                    {
+                        if (await Model._userManager.IsInRoleAsync(user, role.Name))
+                        {
+                            <td>
+                                <a data-modal-role-name="@role.Name" data-modal-user-id="@user.Id" class="btn btn-success text-white p-1 modal-trigger">Ja</a>
+                            </td>
+                        }
+                        else
+                        {
+                            <td>
+                                <a href="?AddUserId=@user.Id&Role=@role.Name" class="btn btn-danger text-white p-1">Nej</a>
+                            </td>
+                        }
+                    }
+                </tr>
+            }
+
+        </table>
+
+
+        <!-- The Modal -->
+        @* <div class="modal" id="myModal">*@
+        <div class="modal" id="myModal" @*tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"*@>
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h4 class="modal-title">Ta bort admin</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <p>Vill du verkligen ta bort adminrollen?</p>
+                        @*                        <p>Det mottagna id't och rollnamn är: <span id="modalUserId"></span> och <span id="modalRoleName"></span></p>
+                    *@
+                    </div>
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <a href="#" id="confirmDelete" class="btn btn-danger">Ja</a>
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Nej</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+</div>

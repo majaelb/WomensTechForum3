@@ -1,0 +1,613 @@
+﻿@page
+@model WomensTechForum2._0.Pages.ForumModel
+@using Helpers
+@inject ForumManager forumManager
+@*@inject SignInManager<IdentityUser> SignInManager
+*@
+@{
+    ViewData["Title"] = "Diskussionsforum";
+    //var user = await UserManager.GetUserAsync(User);
+    //var users = UserManager.Users.ToList();
+}
+
+
+@if (Model.MainCategories != null)
+{
+    @if (Model.ChosenMainCategory != null)
+    {
+        <section class="bg-dark min-vh-100">
+            <div class="p-2">
+                <h1 class="text-center text-warning display-3">Diskussionsforum</h1>
+                <div class="header-bar mx-auto"></div>
+
+                <div class="row">
+                    <div class="col-md-2 text-center text-white">
+                        <article class="menucard dark-card text-white hide-on-small-screen">
+                            @foreach (var cat in Model.MainCategories)
+                            {
+                                <div class="postcard-text p-2">
+                                    <a class="text-decoration-none" asp-route-chosenMainId="@cat.Id"><h4 class="postcard-header font-weight-lighter text-warning">@cat.Name </h4></a>
+                                    <div class="postcard-bar m-auto"></div>
+                                    @if ((Model.SubCategories.Where(s => s.MainCategoryId == cat.Id)).Any())
+                                    {
+
+                                        @foreach (var sub in Model.SubCategories.Where(s => s.MainCategoryId == cat.Id))
+                                        {
+                                           
+                                            <p class="lead "><a class="text-decoration-none subcatlink" asp-route-chosenSubId="@sub.Id">@sub.Name</a></p>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <p class="lead"><span class="small">Kommer snart...</span></p>
+                                    }
+                                </div>
+                            }
+                        </article>
+                    </div>
+                    <div class="col-md-10">
+
+                        <article class="postcard dark-card text-white py-1 px-4 m-2">
+                            <div class="postcard-text">
+                                <h1 class="display-6 postcard-header">@Model.ChosenMainCategory.Name </h1>
+                                <div class="postcard-bar"></div>
+                                @if ((Model.SubCategories.Where(s => s.MainCategoryId == Model.ChosenMainCategory.Id)).Any())
+                                {
+
+                                    @foreach (var sub in Model.SubCategories.Where(s => s.MainCategoryId == Model.ChosenMainCategory.Id))
+                                    {
+                                        var postsInSub = @Model.Posts.Where(p => p.SubCategoryId == sub.Id);
+                                        var postsText = postsInSub.Count() == 1 ? "tråd" : "trådar";
+
+                                        <p class="lead"><a class="text-decoration-none text-warning" asp-route-chosenSubId="@sub.Id">@sub.Name</a> <span class="small"> - @sub.Description  <span class="small text-muted"> | @postsInSub.Count() @postsText</span></span></p>
+                                    }
+                                }
+                                else
+                                {
+                                    <p class="lead"><span class="small">Här kommer det snart spännande underkategorier..</span></p>
+                                }
+                            </div>
+                        </article>
+                    </div>
+                </div>
+            </div>
+        </section>
+    }
+    else if (Model.ChosenSubCategory != null)
+    {
+
+        var chosenmaincat = Model.MainCategories.FirstOrDefault(c => c.Id == Model.ChosenSubCategory.MainCategoryId);
+
+            <section class="bg-dark min-vh-100">
+
+            <div class="p-2">
+
+                <h1 class="text-center text-warning display-3">Diskussionsforum</h1>
+                <div class="header-bar mx-auto"></div>
+                <h1 class="text-center text-warning display-5">@chosenmaincat.Name - @Model.ChosenSubCategory.Name</h1>
+
+                <div class="row">
+                    <div class="col-md-2 text-center text-white">
+                        <article class="menucard dark-card text-white hide-on-small-screen">
+                            @foreach (var cat in Model.MainCategories)
+                            {
+                                <div class="postcard-text p-2">
+                                    <a class="text-decoration-none" asp-route-chosenMainId="@cat.Id"><h4 class="postcard-header font-weight-lighter text-warning">@cat.Name </h4></a>
+                                    <div class="postcard-bar m-auto"></div>
+                                    @if ((Model.SubCategories.Where(s => s.MainCategoryId == cat.Id)).Any())
+                                    {
+
+                                        @foreach (var sub in Model.SubCategories.Where(s => s.MainCategoryId == cat.Id))
+                                        {
+                                            <p class="lead "><a class="text-decoration-none subcatlink" asp-route-chosenSubId="@sub.Id">@sub.Name</a></p>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <p class="lead"><span class="small">Kommer snart...</span></p>
+                                    }
+                                </div>
+                            }
+
+
+                        </article>
+                    </div>
+                    <div class="col-md-10">
+                        @if (Model.CurrentUser != null && Model.CurrentUser.Gender != "Man") //Ändrat check av inloggad user
+                        {
+                            <button class="new-thread-btn btn btn-warning btn-sm" onclick="openForm()"><i class="bi bi-plus-lg"></i>Ny tråd <i class="bi bi-arrow-bar-right"></i></button>
+                            <div class="form-popup" id="myForm">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <form method="post" enctype="multipart/form-data">
+                                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                            <div class="form-group">
+                                                <label asp-for="NewPost.Header" class="control-label text-white"></label>
+                                                <input asp-for="NewPost.Header" class="form-control" />
+                                                <span asp-validation-for="NewPost.Header" class="text-danger"></span>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label asp-for="NewPost.Text" class="control-label text-white"></label>
+                                                <textarea asp-for="NewPost.Text" class="form-control" rows="5" cols="40"></textarea>
+                                                <span asp-validation-for="NewPost.Text" class="text-danger"></span>
+                                            </div>
+
+                                            <label asp-for="NewPost.ImageSrc" class="control-label text-white"></label>
+                                            <input type="file" class="form-control" name="UploadedImage" />
+
+                                            <br>
+                                            <input asp-for="NewPost.SubCategoryId" type="hidden" value="@Model.ChosenSubCategory.Id" />
+
+                                            <div class="form-group">
+                                                <input type="submit" asp-page-handler="NewPost" value="Posta inlägg" class="btn btn-success" />
+                                                <button type="button" class="btn btn-warning" onclick="closeForm()">Stäng</button>
+                                            </div>
+
+
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                        else if (Model.CurrentUser != null && Model.CurrentUser.Gender == "Man")
+                        {
+                            <a href="#" class="new-thread-btn btn btn-warning btn-sm" title="Vill du skapa en ny tråd?" data-bs-toggle="popover" data-bs-content="Du måste vara kvinna för att skapa en ny forumtråd" data-bs-trigger="focus"><i class="bi bi-plus"></i>Ny tråd <i class="bi bi-arrow-bar-right"></i></a>
+                        }
+                        else
+                        {
+                            <a href="#" class="new-thread-btn btn btn-warning btn-sm" title="Vill du skapa en ny tråd?" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-html="true" data-bs-content="Du måste vara inloggad för att skapa en ny forumtråd <hr><a href='https://localhost:44316/Identity/Account/Login' class='btn btn-primary'>Logga in</a>">Ny tråd <i class="bi bi-arrow-bar-right"></i></a>
+                        }
+
+                        @{
+                            var chosenPosts = Model.Posts.Where(p => p.SubCategoryId == Model.ChosenSubCategory.Id);
+                        }
+
+                        @*--Inlägg i SubCategory--*@
+                        @if (chosenPosts != null && chosenPosts.Any())
+                        {
+                            @foreach (var post in chosenPosts)
+                            {
+                                var postThreadssInSub = @Model.PostThreads.Where(p => p.PostId == post.Id);
+                                <article class="postcard dark-card text-white py-1 px-4 m-2">
+
+                                    <div class="postcard-text">
+
+                                        <a class="text-decoration-none " asp-route-chosenPostId="@post.Id"><h1 class="display-6 postcard-header">@post.Header </h1></a>
+                                        @{
+                                            int timeSincePost = DateTime.Now.Date.DayOfYear - post.Date.Value.DayOfYear;
+                                        }
+                                        <p class="text-muted"><i class="bi bi-calendar3 text-warning"> </i>@timeSincePost dagar sedan av @Model.Users.FirstOrDefault(u => u.Id == post.UserId).UserName</p>
+                                        <div class="postcard-bar"></div>
+
+                                        <p class="lead"><span class="small">@post.Text.LimitLength(300)</span></p>
+                                        <p class="small text-muted">@postThreadssInSub.Count() svar</p>
+                                    </div>
+
+                                </article>
+                            }
+                        }
+                        else
+                        {
+                            <p>Inga inlägg ännu...</p>
+                        }
+                    </div>
+                </div>
+            </div>
+        </section>
+    }
+    else if (Model.ChosenPost != null)
+    {
+        <!--FirstPost-->
+        var writer = Model.Users.Where(u => u.Id == Model.ChosenPost.UserId).FirstOrDefault();
+        var chosensubcat = Model.SubCategories.FirstOrDefault(c => c.Id == Model.ChosenPost.SubCategoryId);
+        var chosenmaincat = Model.MainCategories.FirstOrDefault(c => c.Id == @chosensubcat.MainCategoryId);
+        var postdate = @Model.ChosenPost.Date.Value.ToString("dd") + " " + @Model.ChosenPost.Date.Value.ToString("Y") + " " + @Model.ChosenPost.Date.Value.ToString("t");
+
+        <section class="bg-dark min-vh-100">
+            <div class=" p-2">
+                <h1 class="text-center text-warning display-3">Diskussionsforum</h1>
+                <div class="header-bar mx-auto"></div>
+                <h1 class="text-center text-warning display-5">@chosenmaincat.Name - @chosensubcat.Name</h1>
+                <div class="row">
+                    <div class="col-md-2 text-center text-white">
+                        <article class="menucard dark-card text-white hide-on-small-screen">
+                            @foreach (var cat in Model.MainCategories)
+                            {
+                                <div class="postcard-text p-2">
+                                    <a class="text-decoration-none" asp-route-chosenMainId="@cat.Id"><h4 class="postcard-header font-weight-lighter text-warning">@cat.Name </h4></a>
+                                    <div class="postcard-bar m-auto"></div>
+                                    @if ((Model.SubCategories.Where(s => s.MainCategoryId == cat.Id)).Any())
+                                    {
+
+                                        @foreach (var sub in Model.SubCategories.Where(s => s.MainCategoryId == cat.Id))
+                                        {
+                                            <p class="lead "><a class="text-decoration-none subcatlink" asp-route-chosenSubId="@sub.Id">@sub.Name</a></p>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <p class="lead"><span class="small">Kommer snart...</span></p>
+                                    }
+                                </div>
+                            }
+
+
+                        </article>
+                    </div>
+                    <div class="col-md-10">
+                        <article class="postcard dark-card text-white py-1 px-4 m-2">
+                            <div class="postcard-text w-100">
+                                <h1 class="display-6 text-white">@Model.ChosenPost.Header</h1> 
+
+                  
+
+                                <div class="row w-100">
+                                    <div class="col-md-2">
+                                        <div class="card bg-transparent border-0 user-block">
+                                            <div class="card-body p-0">
+                                                <div class="row">
+                                                    <div class="col-4 col-md-12">
+
+                                                        <img class="card-img img-fluid custom-image mb-4" src="~/img/@writer.ImageSrc">
+                                                    </div>
+                                                    <div class="col-8 col-md-12">
+                                                        <p class=" mb-1">@writer.FirstName @writer.LastName</p>
+                                                        <p class="card-text small">@writer.UserName</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-10">
+                                        <p><i class="bi bi-calendar3"></i> @postdate <span class="text-muted float-end">#1</span></p>
+                                        <div class="header-bar"></div>
+                                        <p>@Model.ChosenPost.Text</p>
+
+                                        @if (Model.ChosenPost.ImageSrc != null && Model.ChosenPost.ImageSrc.Any())
+                                        {
+                                            <img class="post-image img-fluid" src="~/img/@Model.ChosenPost.ImageSrc" />
+                                        }
+                                    </div>
+                                </div>
+
+
+                                <div class="btn-container">
+                                    <br>
+
+
+                                    @if (Model.CurrentUser != null && Model.CurrentUser.Gender != "Man") //Ändrat check av inloggad user från signinmanager
+                                    {
+
+                                        <button class="btn btn-warning btn-sm" onclick="openForm()">Svara</button>
+
+
+
+                                        <!--Anmälfunktion-->
+                                        <a class="float-end mx-2 report" data-bs-toggle="modal" data-bs-target="#myModal" data-bs-tooltip="tooltip" title="Anmäl"><i class="bi bi-exclamation-diamond-fill text-danger"></i> </a>
+
+
+                                        @if (forumManager.CheckIfLiked(Model.ChosenPost.Id, Model.CurrentUser.Id))
+                                        {
+                                            <a asp-route-unlikepostid="@Model.ChosenPost.Id"><i class="bi bi-heart-fill text-danger mx-1"></i></a>
+                                        }
+                                        else
+                                        {
+                                            <a asp-route-likepostid="@Model.ChosenPost.Id"><i class="bi bi-heart text-danger mx-1"></i></a>
+                                        }
+
+                                        var count = @Model.LikedPosts.Where(p => p.PostId == Model.ChosenPost.Id).Count();
+                                        <span class="small">@count</span>
+
+                                        <!-- The Modal -->
+                                        <div class="modal text-dark" id="myModal">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+
+                                                    <!-- Modal Header -->
+                                                    <div class="modal-header">
+                                                        <h4 class="modal-title">Anmälan</h4>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                    </div>
+
+                                                    <!-- Modal body -->
+                                                    <div class="modal-body">
+                                                        Vill du verkligen anmäla inlägget?
+                                                    </div>
+
+                                                    <!-- Modal footer -->
+                                                    <div class="modal-footer">
+
+                                                        <a asp-route-changeId="@Model.ChosenPost.Id" class="btn btn-danger">Ja</a>
+
+                                                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Nej</button>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @*--Svara formulär--*@
+                                        <div class="form-popup mt-2" id="myForm">
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <form method="post" enctype="multipart/form-data">
+                                                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                                                        <div class="form-group">
+                                                            <label asp-for="NewPostThread.Text" class="control-label"></label>
+                                                            <textarea asp-for="NewPostThread.Text" class="form-control" rows="5" cols="40"></textarea>
+                                                            <span asp-validation-for="NewPostThread.Text" class="text-danger"></span>
+                                                        </div>
+
+                                                        <label asp-for="NewPostThread.ImageSrc" class="control-label"></label>
+                                                        <input type="file" class="form-control" name="UploadedImage" />
+
+                                                        <br>
+                                                        <input asp-for="NewPostThread.PostId" type="hidden" value="@Model.ChosenPost.Id" />
+
+                                                        <div class="form-group">
+                                                            <input type="submit" asp-page-handler="NewPostThread" value="Svara" class="btn btn-warning btn-sm" />
+                                                            <button type="button" class="btn btn-danger btn-sm" onclick="closeForm()">Stäng</button>
+                                                        </div>
+
+
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    }
+                                    else if (Model.CurrentUser != null && Model.CurrentUser.Gender == "Man")
+                                    {
+                                        <a href="#" class="btn btn-warning btn-sm" title="Vill du delta i tråden?" data-bs-toggle="popover" data-bs-content="Du måste vara kvinna för att svara på inläggen" data-bs-trigger="focus">Svara</a>
+                                        @if (forumManager.CheckIfLiked(Model.ChosenPost.Id, Model.CurrentUser.Id))
+                                        {
+                                            <a asp-route-unlikepostid="@Model.ChosenPost.Id"><i class="bi bi-heart-fill text-danger mx-1"></i></a>
+                                        }
+                                        else
+                                        {
+                                            <a asp-route-likepostid="@Model.ChosenPost.Id"><i class="bi bi-heart text-danger mx-1"></i></a>
+                                        }
+                                        var count = @Model.LikedPosts.Where(p => p.PostId == Model.ChosenPost.Id).Count();
+                                        <span class="small">@count</span>
+                                    }
+                                    else
+                                    {
+                                        <a href="#" class="btn btn-warning btn-sm" title="Vill du delta i tråden?" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-html="true" data-bs-content="Logga in för att svara på inläggen <hr><a href='https://localhost:44316/Identity/Account/Login' class='btn btn-primary'>Logga in</a>">Svara</a>
+                                    }
+                                    @if (Model.CurrentUser != null && Model.CurrentUser.Id == Model.ChosenPost.UserId) //Ändrat till CurrentUser från user
+                                    {
+                                        <a class="float-end mx-2" asp-route-deleteid="@Model.ChosenPost.Id" data-bs-tooltip="tooltip" title="Ta bort"><i class="bi bi-trash text-white"></i></a>
+                                    }
+                                </div>
+                            </div>
+                        </article>
+
+                        @*Post Threads*@
+                        @{
+                            var chosenPostThreads = Model.PostThreads.Where(p => p.PostId == Model.ChosenPost.Id).ToList();
+                            
+                            
+                        }
+                        @if (chosenPostThreads != null && chosenPostThreads.Any())
+
+                        {
+                            @foreach (var postthread in chosenPostThreads)
+                            {
+
+                                var Ptnumber = chosenPostThreads.IndexOf(postthread);
+                                var ptWriter = Model.Users.Where(u => u.Id == postthread.UserId).FirstOrDefault();
+                                var originalWriterId = Model.Posts.FirstOrDefault(u => u.Id == postthread.PostId).UserId;
+                                var originalWriter = Model.Users.FirstOrDefault(u => u.Id == originalWriterId);
+                                var color = ptWriter.Id == originalWriter.Id ? "dark-card" : "bg-info bg-opacity-10";
+                                var postthreaddate = @postthread.Date.Value.ToString("dd") + " " + @postthread.Date.Value.ToString("Y") + " " + @postthread.Date.Value.ToString("t");
+
+                                <article id="@postthread.Id" class="postcard @color text-white py-1 px-4 m-2">
+                                    <div class="postcard-text w-100">
+                                        <div class="row w-100">
+                                            <div class="col-md-2">
+                                                <div class="card bg-transparent border-0">
+                                                    <div class="card-body p-0">
+                                                        <div class="row">
+                                                            <div class="col-4 col-md-12">
+                                                                <img class="card-img img-fluid custom-image mb-4" src="~/img/@ptWriter.ImageSrc">
+                                                            </div>
+                                                            <div class="col-8 col-md-12">
+                                                                <p class="mb-1">@ptWriter.FirstName @ptWriter.LastName</p>
+                                                                <p class="card-text small">@ptWriter.UserName</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="col-md-10">
+                                                <p><i class="bi bi-calendar3"></i> @postthreaddate <span class="text-muted float-end">#@(Ptnumber + 2)</span></p>
+                                                <div class="header-bar"></div>
+                                                @if (postthread.PTAnswerId != null)
+                                                {
+                                                    var pt = Model.PostThreads.FirstOrDefault(p => p.Id == postthread.PTAnswerId);
+                                                    var ptwriter = Model.Users.FirstOrDefault(u => u.Id == pt.UserId);
+                                                    <div class="card w-50 p-2 mb-3 bg-secondary bg-opacity-50 text-white">
+
+
+                                                        <span class="card-title">@ptwriter.UserName skrev: </span>
+                                                        <span class="card-text">@pt.Text</span>
+                                                    </div>
+
+
+
+                                                }
+
+                                                <p>@postthread.Text</p>
+                                                @if (postthread.ImageSrc != null && postthread.ImageSrc.Any())
+                                                {
+                                                    <img class="post-image img-fluid" src="~/img/@postthread.ImageSrc" />
+                                                }
+                                            </div>
+                                        </div>
+
+                                        <div class="btn-container">
+                                            <br>
+
+                                            @if (Model.CurrentUser != null) //Ändrat check av inloggad user från signinmanager
+                                            {
+                                                @if (Model.CurrentUser.Gender != "Man")
+                                                {
+                                                    <button class="btn btn-warning btn-sm" onclick="openPTForm(@postthread.Id)">Svara</button>
+
+                                                    <a data-modal-postthread-id="@postthread.Id" class="float-end mx-2 text-white modal-PT-trigger report"><i class="bi bi-exclamation-diamond-fill text-danger" data-bs-toggle="tooltip" title="Anmäl"></i> </a>
+
+                                                }
+                                                else if (Model.CurrentUser != null && Model.CurrentUser.Gender == "Man")
+                                                {
+                                                    <a href="#" class="btn btn-warning btn-sm" title="Vill du delta i tråden?" data-bs-toggle="popover" data-bs-content="Du måste vara kvinna för att svara på inläggen" data-bs-trigger="focus">Svara</a>
+                                                }
+                                                @if (forumManager.CheckIfPTLiked(postthread.Id, Model.CurrentUser.Id))
+                                                {
+                                                    <a asp-route-unlikePTid="@postthread.Id"><i class="bi bi-heart-fill text-danger mx-1"></i></a>
+                                                }
+                                                else
+                                                {
+                                                    <a asp-route-likePTid="@postthread.Id"><i class="bi bi-heart text-danger mx-1"></i></a>
+                                                }
+
+                                                var count = @Model.LikedPostThreads.Where(p => p.PostThreadId == postthread.Id).Count();
+                                                <span class="small">@count</span>
+                                            }
+                                            else
+                                            {
+                                                <a href="#" class="btn btn-warning btn-sm" title="Vill du delta i tråden?" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-html="true" data-bs-content="Logga in för att svara på inläggen <hr><a href='https://localhost:44316/Identity/Account/Login' class='btn btn-primary'>Logga in</a>">Svara</a>
+                                            }
+
+                                            @if (Model.CurrentUser != null && Model.CurrentUser.Id == postthread.UserId)
+                                            {
+                                                <a class="float-end mx-2 mb-0" asp-route-deletePTid="@postthread.Id"><i class="bi bi-trash text-white " data-bs-toggle="tooltip" title="Ta bort"></i></a>
+                                            }
+
+                                            <div class="form-popup mt-2 myPTForm-@postthread.Id">
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <form method="post" enctype="multipart/form-data">
+                                                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                                                            <div class="form-group">
+                                                                <label asp-for="NewPostThread.Text" class="control-label"></label>
+                                                                <textarea asp-for="NewPostThread.Text" class="form-control" rows="5" cols="40"></textarea>
+                                                                <span asp-validation-for="NewPostThread.Text" class="text-danger"></span>
+                                                            </div>
+
+                                                            <label asp-for="NewPostThread.ImageSrc" class="control-label"></label>
+                                                            <input type="file" class="form-control" name="UploadedImage" />
+
+                                                            <br>
+                                                            <input asp-for="NewPostThread.PostId" type="hidden" value="@Model.ChosenPost.Id" />
+                                                            <input asp-for="NewPostThread.PTAnswerId" type="hidden" value="@postthread.Id" />
+                                                            <div class="form-group">
+                                                                <input type="submit" asp-page-handler="NewPostThread" value="Svara" class="btn btn-warning btn-sm" />
+                                                                <button type="button" class="btn btn-danger btn-sm" onclick="closePTForm(@postthread.Id)">Stäng</button>
+                                                            </div>
+
+
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </article>
+                            }
+                        }
+                        else
+                        {
+
+                            <p class="text-white">Inga svar ännu...</p>
+                        }
+                    </div>
+                </div>
+            </div>
+
+        </section>
+    }
+
+    else
+    {
+        @*<section class="bg-dark text-light p-5 p-lg-0 pt-lg-5 text-center text-sm-start">
+            <div class="container py-2">
+                <div class="d-sm-flex align-items-center justify-content-between">
+                    <div>
+                        <h1>Välkommen till <span class="text-warning">ett forum för kvinnor i tech-branschen!</span></h1>
+                       @* <p class="lead my-4">
+                            Vi erbjuder de senaste nyheterna inom tech och intressanta diskussioner i våra forum
+                        </p>
+                        <br>
+                        <a class="btn btn-warning btn-lg" asp-area="Identity" asp-page="/Account/Register">
+                            Bli medlem här & delta i diskussionerna!
+                        </a>
+                    </div>
+                    <img class="img-fluid w-50 d-none d-sm-block" src="img/pairprogramming.svg" alt="">
+                </div>
+            </div>
+        </section>*@
+        <section class="bg-dark min-vh-100">
+            <div class="container py-2">
+                <h1 class="text-center text-warning display-3">Diskussionsforum</h1>
+                <div class="header-bar mx-auto"></div>
+                <h2 class="text-center text-warning display-5">Huvudkategorier</h2>
+
+               @foreach (var cat in Model.MainCategories)
+                {
+                    <article class="postcard dark-card text-white py-1 px-4 m-2">
+                        <div class="postcard-text">
+                            <a class="text-decoration-none" asp-route-chosenMainId="@cat.Id"><h1 class="display-6 postcard-header">@cat.Name </h1></a>
+                            <div class="postcard-bar"></div>
+                            @if ((Model.SubCategories.Where(s => s.MainCategoryId == cat.Id)).Any())
+                            {
+
+                                @foreach (var sub in Model.SubCategories.Where(s => s.MainCategoryId == cat.Id))
+                                {
+                                    var postsInSub = @Model.Posts.Where(p => p.SubCategoryId == sub.Id);
+                                    var postsText = postsInSub.Count() == 1 ? "tråd" : "trådar";
+                                    <p class="lead"><a class="text-decoration-none text-warning" asp-route-chosenSubId="@sub.Id">@sub.Name</a> <span class="small"> - @sub.Description | <span class="text-muted fs-6">@postsInSub.Count() @postsText</span></span></p>
+                                }
+                            }
+                            else
+                            {
+                                <p class="lead"><span class="small">Här kommer det snart spännande underkategorier..</span></p>
+                            }
+                        </div>
+                    </article>
+                }
+            </div>
+        </section>
+    }
+}
+
+
+
+
+
+<!-- The Modal anmälan postthread -->
+<div class="modal" id="myPTModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Anmälan</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <!-- Modal body -->
+            <div class="modal-body">
+                <p>Vill du verkligen anmäla inlägget?</p>
+
+            </div>
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                @*                <a id="confirmReport" asp-route-changeId="" class="btn btn-danger">Ja</a>
+                *@               <a href="#" id="confirmReport" class="btn btn-danger">Ja</a>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Nej</button>
+            </div>
+        </div>
+    </div>
+</div>

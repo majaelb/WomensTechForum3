@@ -1,0 +1,163 @@
+﻿@page
+@using Helpers
+@model IndexModel
+@{
+    ViewData["Title"] = "Startsida";
+}
+
+
+@*<section class="banner">
+    <img src="img/banner-g704a4f908_1280.jpg" />
+    <div class="banner-text">
+        <h1>Välkommen till <span class="text-warning">ett forum för kvinnor i tech-branschen!</span></h1>
+        <p class="lead my-4">
+            Vi erbjuder de senaste nyheterna inom tech och intressanta diskussioner i våra forum
+        </p>
+        <a class="btn btn-light btn-lg rounded-0" asp-area="Identity" asp-page="/Account/Register">
+            Bli medlem här för att joina vårt community
+        </a>
+    </div>
+</section>*@
+
+<section class="banner">
+    <img src="img/banner-g704a4f908_1280.jpg" />
+    <div class="banner-text">
+        <h1 class="banner-header-text">Välkommen till ett <span class="text-warning">forum för kvinnor inom tech</span></h1>
+        <p class="my-4 banner-info-text">
+            Vi erbjuder de senaste nyheterna inom tech och intressanta diskussioner i våra forum
+        </p>
+        <a class="banner-btn btn btn-warning btn-lg rounded-0" asp-area="Identity" asp-page="/Account/Register">
+            Bli medlem här för att joina vårt community
+        </a>
+    </div>
+</section>
+
+
+
+<section class="popular-posts my-5">
+    <div class="container">
+        <h1 class="text-center text-uppercase">Nytt från forumet</h1>
+        <div class="firstpage-header-bar mx-auto my-4"></div>
+
+
+        <div class="row text-center g-5">
+
+
+            <div class="col-lg-6 d-flex ">
+                @{
+                    var latestPosts = Model.Posts.OrderBy(p => p.Date).Take(5);
+                }
+
+
+                <div class="card p-3 latest-card border-2 rounded-0 flex-fill">
+                    <h2 class="text-center text-uppercase">Senaste inläggen</h2>
+                    <div class="firstpage-header-bar mx-auto my-4"></div>
+                    @foreach (var post in latestPosts)
+                    {
+
+                        var writer = Model.Users.FirstOrDefault(u => u.Id == post.UserId);
+
+
+                        <div class="card-title">
+                            <h4 class="zoom-text"><a href="./Forum?chosenPostId=@post.Id" class="text-black text-decoration-none">@post.Header</a></h4>
+                        </div>
+                        <div class="card-text">
+
+                            <p class="small">@writer.FirstName @writer.LastName</p>
+                        </div>
+                        <div class="firstpage-bar mx-auto my-2"></div>
+                    }
+                </div>
+            </div>
+            <div class="col-lg-6 d-flex">
+                @{
+                    var popCategories = Model.Posts.GroupBy(p => p.SubCategoryId).OrderByDescending(c => c.Count()).Take(5);
+                }
+
+
+                <div class="card p-3 latest-card border-2 rounded-0 d-flex flex-fill">
+                    <h2 class="text-center text-uppercase">Populära kategorier</h2>
+                    <div class="firstpage-header-bar mx-auto my-4"></div>
+                    @if (popCategories != null)
+                    {
+                        @foreach (var cat in popCategories)
+                        {
+                            var subCategory = Model.SubCategories.FirstOrDefault(s => s.Id == cat.Key);
+
+                            <div class="card-title">
+                                <h4 class="zoom-text"><a href="./Forum?chosenSubId=@subCategory.Id" class="text-black text-decoration-none">@subCategory.Name</a></h4>
+                            </div>
+                            <div class="card-text">
+                                <p class="small">@cat.Count() inlägg</p>
+                            </div>
+                            <div class="firstpage-bar mx-auto my-2"></div>
+                        }
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+
+
+
+<div class="quote text-center d-flex align-items-center">
+    <div class="flex-column mx-auto">
+
+        <h6 class="d-block display-6 mx-auto"><i class="text-black quote-mark bi bi-chat-right-quote"></i> @Model.RandomQuote.Citation</h6>
+
+        <p class="blockquote-footer mt-4">
+            <cite>Chat GPT</cite>
+        </p>
+    </div>
+</div>
+
+
+<section class="news my-5">
+    <h1 class="text-center text-uppercase">Nyheter</h1>
+    <div class="firstpage-bar mx-auto my-4"></div>
+    <div class="container">
+        <div class="row text-center g-5">
+
+            @foreach (var article in Model.News)
+            {
+                <div class="col-lg-4 col-md-6 d-flex">
+                    <div class="card news-card rounded-0 border-0">
+                        <div class="card-body d-flex flex-column">
+                            <img class="article-image" src="@article.UrlToImage">
+                            <h3 class="card-title my-3">
+                                @article.Title
+                            </h3>
+                            <p class="card-text">
+                                @article.Description.LimitLength(250)
+                            </p>
+                            <a href="@article.Url" class="mt-auto text-uppercase fw-bolder text-decoration-none text-black" target="_blank">Läs mer <i class="bi bi-chevron-double-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+
+
+
+</section>
+
+
+
+@*<div class="quote text-center d-flex align-items-center">
+    <div class="flex-column mx-auto">
+
+        <h6 class="d-block display-6 mx-auto"><i class="text-black quote-mark bi bi-chat-right-quote"></i> @Model.RandomQuote.Citation</h6>
+
+        <p class="blockquote-footer mt-4">
+            <cite>Chat GPT</cite>
+        </p>
+    </div>
+</div>*@

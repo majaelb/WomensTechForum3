@@ -1,0 +1,82 @@
+﻿@page
+@model WomensTechForum2._0.Pages.Admin.ReportedPostModel
+@{
+}
+
+<div class="container py-2">
+    <h1>Anmälda inlägg</h1>
+
+    <h2>Anmälda original-inlägg</h2>
+    <table class="table table-striped table-hover ">
+        <tr>
+            <th>Användare</th>
+            <th>Datum</th>
+            <th>Rubrik</th>
+            <th>Text</th>
+            <th>Antal anmälningar</th>
+            <th>Bild</th>
+            <th>Ändra</th>
+            <th>Ta bort</th>
+        </tr>
+        @foreach (var post in Model.ReportedPosts)
+        {
+            <tr>
+                <td>@Model.Users.FirstOrDefault(u => u.Id == post.UserId).UserName</td>
+                <td>@post.Date</td>
+                <td>@post.Header</td>
+                <td>@post.Text</td>
+                <td>@post.NoOfReports</td>
+                @if (post.ImageSrc != null && post.ImageSrc.Any())
+                {
+                    <td><img src="~/img/@post.ImageSrc" class="img-fluid" /></td>
+                }
+                else
+                {
+                    <td> </td>
+                }
+                <td>
+                    <a class="btn btn-primary btn-sm" asp-route-changeId="@post.Id">Markera som ej stötande</a>
+                </td>
+                <td><a class="btn btn-danger btn-sm" asp-route-deleteId="@post.Id">Stötande inlägg - Radera</a></td>
+            </tr>
+
+            @*
+        asp-page="./OffensivePosts/Edit"
+        asp-page="./OffensivePosts/Delete"*@
+        }
+
+    </table>
+    <h2>Anmälda kommentars-inlägg</h2>
+    <table class="table table-striped table-hover ">
+        <tr>
+            <th>Användare</th>
+            <th>Datum</th>
+            <th>Text</th>
+            <th>Antal anmälningar</th>
+            <th>Bild</th>
+            <th>Ändra</th>
+            <th>Ta bort</th>
+        </tr>
+        @foreach (var post in Model.ReportedPostThreads)
+        {
+            <tr>
+                <td>@Model.Users.FirstOrDefault(u => u.Id == post.UserId).UserName</td>
+                <td>@post.Date</td>
+                <td>@post.Text</td>
+                <td>@post.NoOfReports</td>
+                @if (post.ImageSrc != null && post.ImageSrc.Any())
+                {
+                    <td><img src="~/img/@post.ImageSrc" class="img-fluid" /></td>
+                }
+                else
+                {
+                    <td> </td>
+                }
+                <td><a class="btn btn-primary btn-sm" asp-route-changePTId="@post.Id">Markera som ej stötande</a></td>
+                <td><a class="btn btn-danger btn-sm" asp-route-deletePTId="@post.Id">Stötande inlägg - Radera</a></td>
+
+            </tr>
+        }
+
+    </table>
+</div>

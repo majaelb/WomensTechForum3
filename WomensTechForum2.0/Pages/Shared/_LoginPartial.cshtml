@@ -1,0 +1,65 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using WomensTechForum2._0.Areas.Identity.Data
+
+@inject SignInManager<WomensTechForum2_0User> SignInManager
+@inject UserManager<WomensTechForum2_0User> UserManager
+@{
+    var messages = await DAL.MessageManager.GetAllMessages();
+    var user = await UserManager.GetUserAsync(User);
+    
+
+}
+
+
+<ul class="navbar-nav">
+    @if (SignInManager.IsSignedIn(User))
+    {
+        bool isAdmin = await UserManager.IsInRoleAsync(user, "Admin");
+        @if (isAdmin)
+        {
+            <li class="nav-item dropdown">
+                <a class="nav-link text-white dropdown-toggle" data-bs-toggle="dropdown" asp-area="" asp-page="/Admin/AdminUI">Admin</a>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" asp-page="/Admin/AdminUI">Kategorier</a></li>
+                    <li><a class="dropdown-item" asp-page="/Admin/ReportedPost">Anmälda inlägg</a></li>
+                    <li><a class="dropdown-item" asp-page="/Admin/RoleAdmin/Index">Roller</a></li>
+                </ul>
+            </li>
+        }
+
+        //Räkna hur många olästa meddelanden den inloggade användaren har
+        int unreadMessages = messages.Where(m => m.ReceiverId == user.Id).Where(m => m.IsRead == false).Count();
+
+        <li class="nav-item">
+            <a id="manage" class="nav-link text-white" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hej @UserManager.GetUserName(User)!</a>
+        </li>
+        @if (unreadMessages > 0)
+        {
+
+            <li class="nav-item">
+                <a class="nav-link text-white" asp-area="" asp-page="/Message"><i class="bi bi-envelope-fill"> </i><span class="badge bg-danger">@unreadMessages</span></a>
+            </li>
+        }
+        else
+        {
+            <li class="nav-item">
+                <a class="nav-link text-white" asp-area="" asp-page="/Message"><i class="bi bi-envelope-fill"></i></a>
+            </li>
+        }
+
+        <li class="nav-item">
+            <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/Index", new { area = "" })">
+                <button id="logout" type="submit" class="nav-link btn btn-link text-white border-0">Logga ut</button>
+            </form>
+        </li>
+    }
+    else
+    {
+        <li class="nav-item">
+            <a class="nav-link text-white" id="register" asp-area="Identity" asp-page="/Account/Register">Registrera</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-white" id="login" asp-area="Identity" asp-page="/Account/Login">Logga in</a>
+        </li>
+    }
+</ul>
