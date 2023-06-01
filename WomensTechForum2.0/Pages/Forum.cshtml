@@ -1,9 +1,8 @@
 ﻿@page
 @model WomensTechForum2._0.Pages.ForumModel
 @using Helpers
+@using System.Globalization;
 @inject ForumManager forumManager
-@*@inject SignInManager<IdentityUser> SignInManager
-*@
 @{
     ViewData["Title"] = "Diskussionsforum";
     //var user = await UserManager.GetUserAsync(User);
@@ -200,10 +199,12 @@
     else if (Model.ChosenPost != null)
     {
         <!--FirstPost-->
+        
         var writer = Model.Users.Where(u => u.Id == Model.ChosenPost.UserId).FirstOrDefault();
         var chosensubcat = Model.SubCategories.FirstOrDefault(c => c.Id == Model.ChosenPost.SubCategoryId);
         var chosenmaincat = Model.MainCategories.FirstOrDefault(c => c.Id == @chosensubcat.MainCategoryId);
-        var postdate = @Model.ChosenPost.Date.Value.ToString("dd") + " " + @Model.ChosenPost.Date.Value.ToString("Y") + " " + @Model.ChosenPost.Date.Value.ToString("t");
+        CultureInfo swedishCulture = new CultureInfo("sv-SE");
+        var postdate = @Model.ChosenPost.Date.Value.ToString("dd", swedishCulture) + " " + @Model.ChosenPost.Date.Value.ToString("Y", swedishCulture) + " " + @Model.ChosenPost.Date.Value.ToString("t", swedishCulture);
 
         <section class="bg-dark min-vh-100">
             <div class=" p-2">
@@ -401,7 +402,8 @@
                                 var originalWriterId = Model.Posts.FirstOrDefault(u => u.Id == postthread.PostId).UserId;
                                 var originalWriter = Model.Users.FirstOrDefault(u => u.Id == originalWriterId);
                                 var color = ptWriter.Id == originalWriter.Id ? "dark-card" : "bg-info bg-opacity-10";
-                                var postthreaddate = @postthread.Date.Value.ToString("dd") + " " + @postthread.Date.Value.ToString("Y") + " " + @postthread.Date.Value.ToString("t");
+
+                                var postthreaddate = @postthread.Date.Value.ToString("dd", swedishCulture) + " " + @postthread.Date.Value.ToString("Y", swedishCulture) + " " + @postthread.Date.Value.ToString("t", swedishCulture);
 
                                 <article id="@postthread.Id" class="postcard @color text-white py-1 px-4 m-2">
                                     <div class="postcard-text w-100">

@@ -1,9 +1,11 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Hosting;
+using System.Globalization;
 using System.Security.Claims;
 using WomensTechForum2._0.Areas.Identity.Data;
 using WomensTechForum2._0.Helpers;
@@ -48,7 +50,7 @@ namespace WomensTechForum2._0.Pages
 
         [BindProperty]
         public IFormFile UploadedImage { get; set; } //Läggs utanför databas-innehållet för att sparas som en sträng i db längre ner
-
+        private DateTimeOffset localTime = TimeZoneInfo.ConvertTime(DateTimeOffset.Now, TimeZoneInfo.FindSystemTimeZoneById("W. Europe Standard Time"));
 
         public async Task<IActionResult> OnGetAsync(int chosenMainId, int chosenSubId, int chosenPostId, int deleteid, int deletePTid, int changeId, int changePTId, int unlikepostid, int likepostid, int unlikePTid, int likePTid)
         {
@@ -199,40 +201,6 @@ namespace WomensTechForum2._0.Pages
 
             }
 
-            //if (likePTid != 0)
-            //{
-            //    var likePostThread = new LikePostThread()
-            //    {
-            //        PostThreadId = likePTid,
-            //        UserId = User.FindFirstValue(ClaimTypes.NameIdentifier)
-            //    };
-
-            //    _context.LikePostThread.Add(likePostThread);
-            //    await _context.SaveChangesAsync();
-
-            //    return new JsonResult(new { success = true, message = "Inlägget gillades." });
-            //}
-
-            //if (unlikePTid != 0)
-            //{
-            //    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            //    LikePostThread likePostThread = await _context.LikePostThread.FirstOrDefaultAsync(p => p.PostThreadId == unlikePTid && p.UserId == userId);
-
-            //    if (likePostThread != null)
-            //    {
-            //        _context.LikePostThread.Remove(likePostThread);
-            //        await _context.SaveChangesAsync();
-
-            //        return new JsonResult(new { success = true, message = "Inlägget ogillades." });
-            //    }
-            //}
-
-            // Om ingen åtgärd utfördes eller om det uppstod ett fel
-            //return new JsonResult(new { success = false, message = "Ett fel uppstod." });
-
-
-
-
             return Page();
         }
 
@@ -257,7 +225,8 @@ namespace WomensTechForum2._0.Pages
             }
             if (NewPost.Header != null && NewPost.Text != null)
             {
-                NewPost.Date = DateTime.Now;
+
+                NewPost.Date = localTime.DateTime;
                 NewPost.ImageSrc = fileName;
                 NewPost.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 _context.Add(NewPost);
@@ -286,8 +255,8 @@ namespace WomensTechForum2._0.Pages
 
             if (NewPostThread.Text != null)
             {
-
-                NewPostThread.Date = DateTime.Now;
+                
+                NewPostThread.Date = localTime.DateTime;
                 NewPostThread.ImageSrc = fileName;
                 NewPostThread.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 

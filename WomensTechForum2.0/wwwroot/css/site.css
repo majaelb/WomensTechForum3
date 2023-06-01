@@ -26,13 +26,17 @@ html {
     }
 
 .privacy-footer {
-    color: white;
+    color: #ffc107;
 }
 
     .privacy-footer:hover {
-        color: #ffc107;
+        color: white;
     }
-
+.socialmedia-nav{
+    flex-grow: 1;
+    text-align: end;
+    list-style-type: none;
+}
 .form-popup {
     display: none;
 }
@@ -264,3 +268,4 @@ html {
     footer{
         min-height: 50vh;
     }
+   
