@@ -18,7 +18,7 @@
             <div class="p-2">
                 <h1 class="text-center text-warning display-3">Diskussionsforum</h1>
                 <div class="header-bar mx-auto"></div>
-
+                <a asp-page="/Forum" class="text-white">Tillbaka till forum</a>
                 <div class="row">
                     <div class="col-md-2 text-center text-white">
                         <article class="menucard dark-card text-white hide-on-small-screen">
@@ -84,6 +84,7 @@
                 <h1 class="text-center text-warning display-3">Diskussionsforum</h1>
                 <div class="header-bar mx-auto"></div>
                 <h1 class="text-center text-warning display-5">@chosenmaincat.Name - @Model.ChosenSubCategory.Name</h1>
+                <a href="/Forum?chosenMainId=@chosenmaincat.Id" class="text-white">Tillbaka till @chosenmaincat.Name</a>
 
                 <div class="row">
                     <div class="col-md-2 text-center text-white">
@@ -211,6 +212,8 @@
                 <h1 class="text-center text-warning display-3">Diskussionsforum</h1>
                 <div class="header-bar mx-auto"></div>
                 <h1 class="text-center text-warning display-5">@chosenmaincat.Name - @chosensubcat.Name</h1>
+                <a href="/Forum?chosenSubId=@chosensubcat.Id" class="text-white">Tillbaka till @chosensubcat.Name</a>
+
                 <div class="row">
                     <div class="col-md-2 text-center text-white">
                         <article class="menucard dark-card text-white hide-on-small-screen">
@@ -264,8 +267,10 @@
                                     <div class="col-md-10">
                                         <p><i class="bi bi-calendar3"></i> @postdate <span class="text-muted float-end">#1</span></p>
                                         <div class="header-bar"></div>
-                                        <p>@Model.ChosenPost.Text</p>
+                                        <p class="break-line">@Html.Raw(Model.ChosenPost.Text.Replace(Environment.NewLine, "<br />"))</p>
 
+@*                                        <p>@Model.ChosenPost.Text</p>
+*@
                                         @if (Model.ChosenPost.ImageSrc != null && Model.ChosenPost.ImageSrc.Any())
                                         {
                                             <img class="post-image img-fluid" src="~/img/@Model.ChosenPost.ImageSrc" />

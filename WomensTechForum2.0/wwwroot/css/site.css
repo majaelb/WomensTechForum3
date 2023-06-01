@@ -268,4 +268,7 @@ html {
     footer{
         min-height: 50vh;
     }
-   
+
+.postcard-text break-line {
+    white-space: pre-wrap;
+}
