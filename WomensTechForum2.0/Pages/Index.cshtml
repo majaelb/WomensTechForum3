@@ -1,6 +1,9 @@
 ﻿@page
+@using Microsoft.AspNetCore.Identity
+@using WomensTechForum2._0.Areas.Identity.Data
 @using Helpers
 @model IndexModel
+@inject SignInManager<WomensTechForum2_0User> SignInManager
 @{
     ViewData["Title"] = "Startsida";
 }
@@ -26,9 +29,13 @@
         <p class="my-4 banner-info-text">
             Vi erbjuder de senaste nyheterna inom tech och intressanta diskussioner i våra forum
         </p>
-        <a class="banner-btn btn btn-warning btn-lg rounded-0" asp-area="Identity" asp-page="/Account/Register">
-            Bli medlem här för att joina vårt community
-        </a>
+        @if (!SignInManager.IsSignedIn(User))
+        {
+            <a class="banner-btn btn btn-warning btn-lg rounded-0" asp-area="Identity" asp-page="/Account/Register">
+                Bli medlem här för att joina vårt community
+            </a>
+        }
+
     </div>
 </section>
 
@@ -45,7 +52,7 @@
 
             <div class="col-lg-6 d-flex ">
                 @{
-                    var latestPosts = Model.Posts.OrderBy(p => p.Date).Take(5);
+                    var latestPosts = Model.Posts.OrderByDescending(p => p.Date).Take(5);
                 }
 
 
