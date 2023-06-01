@@ -13,7 +13,8 @@ namespace WomensTechForum2._0.DAL
 
             using (var client = new HttpClient())
             {
-                client.BaseAddress = new Uri("https://localhost:44316/");
+                //client.BaseAddress = new Uri("https://localhost:44316/");
+                client.BaseAddress = new Uri("https://womenstechforum.azurewebsites.net/");
                 var response = await client.GetAsync("/json/quote.json");
 
                 var json = await response.Content.ReadAsStringAsync();
