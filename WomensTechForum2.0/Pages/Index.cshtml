@@ -63,6 +63,7 @@
                     {
 
                         var writer = Model.Users.FirstOrDefault(u => u.Id == post.UserId);
+                        var postdate = @post.Date.Value.ToString("dd") + "/" + @post.Date.Value.ToString("MM") + " - " + @post.Date.Value.ToString("yy");
 
 
                         <div class="card-title">
@@ -70,7 +71,7 @@
                         </div>
                         <div class="card-text">
 
-                            <p class="small">@writer.FirstName @writer.LastName</p>
+                            <p class="small"><span>@postdate</span> av @writer.FirstName @writer.LastName </p>
                         </div>
                         <div class="firstpage-bar mx-auto my-2"></div>
                     }

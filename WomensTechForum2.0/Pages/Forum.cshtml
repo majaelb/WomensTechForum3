@@ -446,9 +446,10 @@
 
 
                                                 }
+                                                <p class="break-line">@Html.Raw(postthread.Text.Replace(Environment.NewLine, "<br />"))</p>
 
-                                                <p>@postthread.Text</p>
-                                                @if (postthread.ImageSrc != null && postthread.ImageSrc.Any())
+@*                                                <p>@postthread.Text</p>
+*@                                                @if (postthread.ImageSrc != null && postthread.ImageSrc.Any())
                                                 {
                                                     <img class="post-image img-fluid" src="~/img/@postthread.ImageSrc" />
                                                 }
