@@ -89,7 +89,6 @@
     </footer>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            console.log("Nu körs scroll-funktionen");
             var header = document.getElementById("main-header");
             var scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
 
@@ -97,11 +96,9 @@
                 scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
 
                 if (scrollPosition > 0) {
-                    header.classList.add("bg-dark");
-                    header.classList.add("bg-opacity-50");
+                    header.classList.add("header-scroll");
                 } else {
-                    header.classList.remove("bg-dark");
-                    header.classList.remove("bg-opacity-50");
+                    header.classList.remove("header-scroll");
                 }
             }
 
