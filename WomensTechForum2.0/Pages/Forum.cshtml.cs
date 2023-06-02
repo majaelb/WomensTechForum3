@@ -161,65 +161,24 @@ namespace WomensTechForum2._0.Pages
 
         public async Task<IActionResult> OnPostNewPostAsync()
         {
-            string fileName = string.Empty;
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            if (string.IsNullOrEmpty(NewPost.Header))
-            {
-                ModelState.AddModelError("NewPost.Header", "Du måste ange en rubrik");
-            }
-            if (string.IsNullOrEmpty(NewPost.Text))
-            {
-                ModelState.AddModelError("NewPost.Text", "Du måste skriva en text");
-            }
-
-            if (UploadedImage != null)
-            {
-                fileName = _forumManager.SetFileName(fileName, UploadedImage);
-                var file = _forumManager.CreateFile(fileName);
-                await _forumManager.SaveFileAsync(file, UploadedImage);
-            }
             if (NewPost.Header != null && NewPost.Text != null)
             {
-
-                NewPost.Date = localTime.DateTime;
-                NewPost.ImageSrc = fileName;
-                NewPost.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                _context.Add(NewPost);
-                await _context.SaveChangesAsync();
+                url = await _forumManager.CreateNewPost(NewPost, UploadedImage, userId);
             }
-
-            url = "./Forum?chosenPostId=" + NewPost.Id.ToString();
             return Redirect(url);
 
         }
 
         public async Task<IActionResult> OnPostNewPostThreadAsync()
         {
-            string fileName = string.Empty;
-
-            if (string.IsNullOrEmpty(NewPostThread.Text))
-            {
-                ModelState.AddModelError("NewPostThread.Text", "Du måste skriva en text");
-            }
-            if (UploadedImage != null)
-            {
-                fileName = _forumManager.SetFileName(fileName, UploadedImage);
-                var file = _forumManager.CreateFile(fileName);
-                await _forumManager.SaveFileAsync(file, UploadedImage);
-            }
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             if (NewPostThread.Text != null)
             {
-
-                NewPostThread.Date = localTime.DateTime;
-                NewPostThread.ImageSrc = fileName;
-                NewPostThread.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-                _context.Add(NewPostThread);
-                await _context.SaveChangesAsync();
+                url = await _forumManager.CreateNewPostThread(NewPostThread, UploadedImage, userId);
             }
-
-            url = "./Forum?chosenPostId=" + NewPostThread.PostId.ToString();
             return Redirect(url);
         }
     }

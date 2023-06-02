@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Reflection;
+using System.Security.Claims;
+using System.Security.Policy;
 using WomensTechForum2._0.Areas.Identity.Data;
 using WomensTechForum2._0.DAL;
 using WomensTechForum2._0.Models;
@@ -12,12 +15,12 @@ namespace WomensTechForum2._0.Helpers
     {
         private readonly Data.WomensTechForum2_0Context _context;
         public UserManager<WomensTechForum2_0User> _userManager;
+        private readonly DateTimeOffset localTime = TimeZoneInfo.ConvertTime(DateTimeOffset.Now, TimeZoneInfo.FindSystemTimeZoneById("W. Europe Standard Time"));
 
         public ForumManager(Data.WomensTechForum2_0Context context, UserManager<WomensTechForum2_0User> userManager)
         {
             _context = context;
             _userManager = userManager;
-
         }
 
         public string SetFileName(string fileName, IFormFile UploadedImage)
@@ -81,8 +84,8 @@ namespace WomensTechForum2._0.Helpers
 
         public async Task<string> DeleteObject<T>(int objectId) where T : class
         {
-            string url = "";
 
+            string url = "";
             T obj = await _context.Set<T>().FindAsync(objectId);
 
             if (obj != null)
@@ -121,11 +124,11 @@ namespace WomensTechForum2._0.Helpers
 
         public async Task<string> LikeObject<T>(int objectId, string userId) where T : class, new()
         {
-
+            string url = "";
             T likeObject = new T();
             PropertyInfo objectIdProperty = typeof(T).GetProperty("PostId") ?? typeof(T).GetProperty("PostThreadId");
             PropertyInfo userIdProperty = typeof(T).GetProperty("UserId");
-            string url = string.Empty;
+
             int postId = 0;
 
             if (objectIdProperty != null && userIdProperty != null)
@@ -156,7 +159,7 @@ namespace WomensTechForum2._0.Helpers
         }
         public async Task<string> UnlikeObject<T>(int objectId, string userId) where T : class
         {
-            string url = string.Empty;
+            string url = "";
             int postId = 0;
 
             T likeObject = _context.Set<T>().AsEnumerable().FirstOrDefault(p => GetObjectId(p) == objectId && GetUserId(p) == userId);
@@ -184,7 +187,6 @@ namespace WomensTechForum2._0.Helpers
             }
             return url;
         }
-
         private int GetObjectId<T>(T obj)
         {
             PropertyInfo objectIdProperty = typeof(T).GetProperty("PostId") ?? typeof(T).GetProperty("PostThreadId");
@@ -203,6 +205,56 @@ namespace WomensTechForum2._0.Helpers
                 return userIdProperty.GetValue(obj).ToString();
             }
             return null;
+        }
+
+        public async Task<string> CreateNewPost(Models.Post NewPost, IFormFile UploadedImage, string UserId)
+        {
+            string fileName = string.Empty;
+            string url = "";
+            if (UploadedImage != null)
+            {
+                fileName = SetFileName(fileName, UploadedImage);
+                var file = CreateFile(fileName);
+                await SaveFileAsync(file, UploadedImage);
+            }
+            if (NewPost.Header != null && NewPost.Text != null)
+            {
+
+                NewPost.Date = localTime.DateTime;
+                NewPost.ImageSrc = fileName;
+                NewPost.UserId = UserId;
+                _context.Add(NewPost);
+                await _context.SaveChangesAsync();
+            }
+            url = "./Forum?chosenPostId=" + NewPost.Id.ToString();
+            return url;
+        }
+
+        public async Task<string> CreateNewPostThread(Models.PostThread NewPostThread, IFormFile UploadedImage, string UserId)
+        {
+            string fileName = string.Empty;
+
+            if (UploadedImage != null)
+            {
+                fileName = SetFileName(fileName, UploadedImage);
+                var file = CreateFile(fileName);
+                await SaveFileAsync(file, UploadedImage);
+            }
+
+            if (NewPostThread.Text != null)
+            {
+
+                NewPostThread.Date = localTime.DateTime;
+                NewPostThread.ImageSrc = fileName;
+                NewPostThread.UserId = UserId;
+
+                _context.Add(NewPostThread);
+                await _context.SaveChangesAsync();
+            }
+
+            string url = "./Forum?chosenPostId=" + NewPostThread.PostId.ToString();
+
+            return url;
         }
     }
 }
