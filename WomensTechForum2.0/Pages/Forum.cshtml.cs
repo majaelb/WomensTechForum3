@@ -50,7 +50,8 @@ namespace WomensTechForum2._0.Pages
 
         [BindProperty]
         public IFormFile UploadedImage { get; set; } //Läggs utanför databas-innehållet för att sparas som en sträng i db längre ner
-        private DateTimeOffset localTime = TimeZoneInfo.ConvertTime(DateTimeOffset.Now, TimeZoneInfo.FindSystemTimeZoneById("W. Europe Standard Time"));
+        private readonly DateTimeOffset localTime = TimeZoneInfo.ConvertTime(DateTimeOffset.Now, TimeZoneInfo.FindSystemTimeZoneById("W. Europe Standard Time"));
+        private string url = "";
 
         public async Task<IActionResult> OnGetAsync(int chosenMainId, int chosenSubId, int chosenPostId, int deleteid, int deletePTid, int changeId, int changePTId, int unlikepostid, int likepostid, int unlikePTid, int likePTid)
         {
@@ -78,126 +79,80 @@ namespace WomensTechForum2._0.Pages
             }
             if (deleteid != 0)
             {
-                Post post = await _context.Post.FindAsync(deleteid);
 
-                if (post != null)
-                {
-                    if (System.IO.File.Exists("./wwwroot/img/" + post.ImageSrc))
-                    {
-                        System.IO.File.Delete("./wwwroot/img/" + post.ImageSrc); //Ta bort bilden
-                    }
-                    string url = "./Forum?chosenSubId=" + post.SubCategoryId.ToString();
+                url = await _forumManager.DeleteObject<Post>(deleteid);
 
-                    _context.Post.Remove(post); //ta bort inlägget
-                    await _context.SaveChangesAsync(); //Spara
-
-                    return Redirect(url);
-                }
+                return Redirect(url ?? "./Forum");
             }
             if (deletePTid != 0)
             {
-                Models.PostThread postThread = await _context.PostThread.FindAsync(deletePTid);
+                url = await _forumManager.DeleteObject<PostThread>(deletePTid);
+                return Redirect(url ?? "./Forum");
 
-                if (postThread != null)
-                {
-                    if (System.IO.File.Exists("./wwwroot/img/" + postThread.ImageSrc))
-                    {
-                        System.IO.File.Delete("./wwwroot/img/" + postThread.ImageSrc); //Ta bort bilden
-                    }
-                    string url = "./Forum?chosenPostId=" + postThread.PostId.ToString();
-
-                    _context.PostThread.RemoveRange(postThread); //ta bort inlägget
-                    await _context.SaveChangesAsync(); //Spara
-
-                    return Redirect(url);
-                }
             }
             if (changeId != 0)
             {
-                Post offensivePost = await _context.Post.FindAsync(changeId);
+                var offensiveObject = await _forumManager.MarkAsOffensive<Post>(changeId);
 
-                if (offensivePost != null)
+                if (offensiveObject != null)
                 {
-                    offensivePost.Offensive = true;
-                    offensivePost.NoOfReports += 1;
-                    await _context.SaveChangesAsync();
-                    string url = "./Forum?chosenPostId=" + offensivePost.Id.ToString();
+                    url = "./Forum?chosenPostId=" + offensiveObject.Id.ToString();
                     return Redirect(url);
-
                 }
             }
+
             if (changePTId != 0)
             {
-                PostThread offensivePost = await _context.PostThread.FindAsync(changePTId);
+                var offensiveObject = await _forumManager.MarkAsOffensive<PostThread>(changePTId);
 
-                if (offensivePost != null)
+                if (offensiveObject != null)
                 {
-                    offensivePost.Offensive = true;
-                    offensivePost.NoOfReports += 1;
-                    await _context.SaveChangesAsync();
-                    string url = "./Forum?chosenPostId=" + offensivePost.PostId.ToString();
+                    url = "./Forum?chosenPostId=" + offensiveObject.PostId.ToString();
                     return Redirect(url);
                 }
             }
+
             if (unlikepostid != 0)
             {
+                
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                LikePost likePost = await _context.LikePost.FirstOrDefaultAsync(p => p.PostId == unlikepostid && p.UserId == userId);
-
-                if (likePost != null)
+                if (userId != null)
                 {
-                    _context.LikePost.Remove(likePost); //ta bort inlägget
-                    await _context.SaveChangesAsync(); //Spara
-
-                    string url = "./Forum?chosenPostId=" + likePost.PostId.ToString();
-                    return Redirect(url);
+                    url = await _forumManager.UnlikeObject<LikePost>(unlikepostid, userId);
                 }
+                return Redirect(url ?? "./Forum");
             }
             if (likepostid != 0)
             {
-                var likePost = new LikePost()
+
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                if (userId != null)
                 {
-                    PostId = likepostid,
-                    UserId = User.FindFirstValue(ClaimTypes.NameIdentifier)
-                };
-
-                _context.LikePost.Add(likePost); //lägg till i listan av likeposts
-                await _context.SaveChangesAsync(); //Spara
-
-                string url = "./Forum?chosenPostId=" + likePost.PostId.ToString();
-                return Redirect(url);
+                    url = await _forumManager.LikeObject<LikePost>(likepostid, userId);
+                }
+                return Redirect(url ?? "./Forum");
 
             }
             if (unlikePTid != 0)
             {
-                //Kolla att Usern som är inloggad är samma som usern i likepostthread!
+
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                LikePostThread likePostThread = await _context.LikePostThread.FirstOrDefaultAsync(p => p.PostThreadId == unlikePTid && p.UserId == userId);
-
-                if (likePostThread != null)
+                if (userId != null)
                 {
-                    _context.LikePostThread.Remove(likePostThread); //ta bort inlägget
-                    await _context.SaveChangesAsync(); //Spara
-
-                    int id = _context.PostThread.FirstOrDefault(p => p.Id == likePostThread.PostThreadId).PostId;
-                    string url = "./Forum?chosenPostId=" + id.ToString() + "#" + unlikePTid.ToString();
-                    return Redirect(url);
+                    url = await _forumManager.UnlikeObject<LikePostThread>(unlikePTid, userId);
                 }
+                return Redirect(url ?? "./Forum");
+
             }
             if (likePTid != 0)
             {
-                var likePostThread = new LikePostThread()
+                
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                if (userId != null)
                 {
-                    PostThreadId = likePTid,
-                    UserId = User.FindFirstValue(ClaimTypes.NameIdentifier)
-                };
-
-                _context.LikePostThread.Add(likePostThread); //lägg till i listan av likeposts
-                await _context.SaveChangesAsync(); //Spara
-
-                int id = _context.PostThread.FirstOrDefault(p => p.Id == likePostThread.PostThreadId).PostId;
-                string url = "./Forum?chosenPostId=" + id.ToString() + "#"+ likePTid.ToString();
-                return Redirect(url);
+                    url = await _forumManager.LikeObject<LikePostThread>(likePTid, userId);
+                }
+                return Redirect(url ?? "./Forum");
 
             }
 
@@ -233,7 +188,7 @@ namespace WomensTechForum2._0.Pages
                 await _context.SaveChangesAsync();
             }
 
-            string url = "./Forum?chosenPostId=" + NewPost.Id.ToString();
+            url = "./Forum?chosenPostId=" + NewPost.Id.ToString();
             return Redirect(url);
 
         }
@@ -255,7 +210,7 @@ namespace WomensTechForum2._0.Pages
 
             if (NewPostThread.Text != null)
             {
-                
+
                 NewPostThread.Date = localTime.DateTime;
                 NewPostThread.ImageSrc = fileName;
                 NewPostThread.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -264,7 +219,7 @@ namespace WomensTechForum2._0.Pages
                 await _context.SaveChangesAsync();
             }
 
-            string url = "./Forum?chosenPostId=" + NewPostThread.PostId.ToString();
+            url = "./Forum?chosenPostId=" + NewPostThread.PostId.ToString();
             return Redirect(url);
         }
     }

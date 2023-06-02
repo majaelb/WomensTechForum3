@@ -1,11 +1,13 @@
 ﻿@page
 @using Microsoft.AspNetCore.Identity
+@using System.Globalization;
 @using WomensTechForum2._0.Areas.Identity.Data
 @using Helpers
 @model IndexModel
 @inject SignInManager<WomensTechForum2_0User> SignInManager
 @{
     ViewData["Title"] = "Startsida";
+
 }
 
 
@@ -63,7 +65,9 @@
                     {
 
                         var writer = Model.Users.FirstOrDefault(u => u.Id == post.UserId);
-                        var posttime = @post.Date.Value.ToString("t");
+                        CultureInfo swedishCulture = new CultureInfo("sv-SE");
+                        var posttime = @post.Date.Value.ToString("t", swedishCulture);
+                        
                         int timeSincePost = DateTime.Now.Date.DayOfYear - post.Date.Value.DayOfYear;
 
                         var postday = post.Date.Value.DayOfYear;
