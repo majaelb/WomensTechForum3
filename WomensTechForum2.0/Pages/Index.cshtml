@@ -63,15 +63,23 @@
                     {
 
                         var writer = Model.Users.FirstOrDefault(u => u.Id == post.UserId);
-                        var postdate = @post.Date.Value.ToString("dd") + "/" + @post.Date.Value.ToString("MM") + " - " + @post.Date.Value.ToString("yy");
+                        var posttime = @post.Date.Value.ToString("t");
+                        int timeSincePost = DateTime.Now.Date.DayOfYear - post.Date.Value.DayOfYear;
 
+                        var postday = post.Date.Value.DayOfYear;
 
                         <div class="card-title">
                             <h4 class="zoom-text"><a href="./Forum?chosenPostId=@post.Id" class="text-black text-decoration-none">@post.Header</a></h4>
                         </div>
                         <div class="card-text">
-
-                            <p class="small"><span>@postdate</span> av @writer.FirstName @writer.LastName </p>
+                            @if (postday == DateTime.Now.DayOfYear)
+                            {
+                                <p class="small"><span>@posttime</span> av @writer.FirstName @writer.LastName </p>
+                            }
+                            else
+                            {
+                                <p class="small"><span>@timeSincePost</span>d av @writer.FirstName @writer.LastName </p>
+                            }
                         </div>
                         <div class="firstpage-bar mx-auto my-2"></div>
                     }

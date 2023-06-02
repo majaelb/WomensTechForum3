@@ -18,7 +18,6 @@
             <div class="p-2">
                 <h1 class="text-center text-warning display-3">Diskussionsforum</h1>
                 <div class="header-bar mx-auto"></div>
-                <a asp-page="/Forum" class="text-white">Tillbaka till forum</a>
                 <div class="row">
                     <div class="col-md-2 text-center text-white">
                         <article class="menucard dark-card text-white hide-on-small-screen">
@@ -32,7 +31,7 @@
 
                                         @foreach (var sub in Model.SubCategories.Where(s => s.MainCategoryId == cat.Id))
                                         {
-                                           
+
                                             <p class="lead "><a class="text-decoration-none subcatlink" asp-route-chosenSubId="@sub.Id">@sub.Name</a></p>
                                         }
                                     }
@@ -45,6 +44,9 @@
                         </article>
                     </div>
                     <div class="col-md-10">
+
+                        <a asp-page="/Index" class="text-white py-1 mx-2 text-decoration-none">Start</a><span class="text-white"> > </span>
+                        <a asp-page="/Forum" class="text-white py-1 mx-2 text-decoration-none">Forum</a>
 
                         <article class="postcard dark-card text-white py-1 px-4 m-2">
                             <div class="postcard-text">
@@ -77,14 +79,13 @@
 
         var chosenmaincat = Model.MainCategories.FirstOrDefault(c => c.Id == Model.ChosenSubCategory.MainCategoryId);
 
-            <section class="bg-dark min-vh-100">
+        <section class="bg-dark min-vh-100">
 
             <div class="p-2">
 
                 <h1 class="text-center text-warning display-3">Diskussionsforum</h1>
                 <div class="header-bar mx-auto"></div>
                 <h1 class="text-center text-warning display-5">@chosenmaincat.Name - @Model.ChosenSubCategory.Name</h1>
-                <a href="/Forum?chosenMainId=@chosenmaincat.Id" class="text-white">Tillbaka till @chosenmaincat.Name</a>
 
                 <div class="row">
                     <div class="col-md-2 text-center text-white">
@@ -113,9 +114,18 @@
                         </article>
                     </div>
                     <div class="col-md-10">
+
+
+
+
                         @if (Model.CurrentUser != null && Model.CurrentUser.Gender != "Man") //Ändrat check av inloggad user
                         {
-                            <button class="new-thread-btn btn btn-warning btn-sm" onclick="openForm()"><i class="bi bi-plus-lg"></i>Ny tråd <i class="bi bi-arrow-bar-right"></i></button>
+                            <button class="new-thread-btn btn btn-warning btn-sm py-1 px-2 mx-2 border-0" onclick="openForm()"><i class="bi bi-plus-lg"></i>Ny tråd</button>
+                            <a asp-page="/Index" class="text-white py-1 mx-2 text-decoration-none">Start</a>
+                            <span class="text-white"> > </span>
+                            <a asp-page="/Forum" class="text-white py-1 mx-2 text-decoration-none">Forum</a>
+                            <span class="text-white"> > </span>
+                            <a href="/Forum?chosenMainId=@chosenmaincat.Id" class="text-white py-1 mx-2 text-decoration-none">@chosenmaincat.Name</a>
                             <div class="form-popup" id="myForm">
                                 <div class="row">
                                     <div class="col-md-4">
@@ -153,11 +163,21 @@
 
                         else if (Model.CurrentUser != null && Model.CurrentUser.Gender == "Man")
                         {
-                            <a href="#" class="new-thread-btn btn btn-warning btn-sm" title="Vill du skapa en ny tråd?" data-bs-toggle="popover" data-bs-content="Du måste vara kvinna för att skapa en ny forumtråd" data-bs-trigger="focus"><i class="bi bi-plus"></i>Ny tråd <i class="bi bi-arrow-bar-right"></i></a>
+                            <a href="#" class="new-thread-btn btn btn-warning btn-sm py-1 px-2 mx-2" title="Vill du skapa en ny tråd?" data-bs-toggle="popover" data-bs-content="Du måste vara kvinna för att skapa en ny forumtråd" data-bs-trigger="focus">Ny tråd</a>
+                            <a asp-page="/Index" class="text-white py-1 mx-2 text-decoration-none">Start</a>
+                            <span class="text-white"> > </span>
+                            <a asp-page="/Forum" class="text-white py-1 mx-2 text-decoration-none">Forum</a>
+                            <span class="text-white"> > </span>
+                            <a href="/Forum?chosenMainId=@chosenmaincat.Id" class="text-white py-1 mx-2 text-decoration-none">@chosenmaincat.Name</a>
                         }
                         else
                         {
-                            <a href="#" class="new-thread-btn btn btn-warning btn-sm" title="Vill du skapa en ny tråd?" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-html="true" data-bs-content="Du måste vara inloggad för att skapa en ny forumtråd <hr><a href='https://localhost:44316/Identity/Account/Login' class='btn btn-primary'>Logga in</a>">Ny tråd <i class="bi bi-arrow-bar-right"></i></a>
+                            <a href="#" class="new-thread-btn btn btn-warning btn-sm py-1 px-2 mx-2" title="Vill du skapa en ny tråd?" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-html="true" data-bs-content="Du måste vara inloggad för att skapa en ny forumtråd <hr><a href='https://localhost:44316/Identity/Account/Login' class='btn btn-primary'>Logga in</a>">Ny tråd</a>
+                            <a asp-page="/Index" class="text-white py-1 mx-2 text-decoration-none">Start</a>
+                            <span class="text-white"> > </span>
+                            <a asp-page="/Forum" class="text-white py-1 mx-2 text-decoration-none">Forum</a>
+                            <span class="text-white"> > </span>
+                            <a href="/Forum?chosenMainId=@chosenmaincat.Id" class="text-white py-1 mx-2 text-decoration-none">@chosenmaincat.Name</a>
                         }
 
                         @{
@@ -190,7 +210,7 @@
                         }
                         else
                         {
-                            <p>Inga inlägg ännu...</p>
+                            <p class="text-white p-1 m-2">Inga inlägg ännu...</p>
                         }
                     </div>
                 </div>
@@ -200,7 +220,6 @@
     else if (Model.ChosenPost != null)
     {
         <!--FirstPost-->
-        
         var writer = Model.Users.Where(u => u.Id == Model.ChosenPost.UserId).FirstOrDefault();
         var chosensubcat = Model.SubCategories.FirstOrDefault(c => c.Id == Model.ChosenPost.SubCategoryId);
         var chosenmaincat = Model.MainCategories.FirstOrDefault(c => c.Id == @chosensubcat.MainCategoryId);
@@ -212,7 +231,6 @@
                 <h1 class="text-center text-warning display-3">Diskussionsforum</h1>
                 <div class="header-bar mx-auto"></div>
                 <h1 class="text-center text-warning display-5">@chosenmaincat.Name - @chosensubcat.Name</h1>
-                <a href="/Forum?chosenSubId=@chosensubcat.Id" class="text-white">Tillbaka till @chosensubcat.Name</a>
 
                 <div class="row">
                     <div class="col-md-2 text-center text-white">
@@ -241,11 +259,18 @@
                         </article>
                     </div>
                     <div class="col-md-10">
+                        <a asp-page="/Index" class="text-white py-1 mx-2 text-decoration-none">Start</a>
+                        <span class="text-white"> > </span>
+                        <a asp-page="/Forum" class="text-white py-1 mx-2 text-decoration-none">Forum</a>
+                        <span class="text-white"> > </span>
+                        <a href="/Forum?chosenMainId=@chosenmaincat.Id" class="text-white py-1 mx-2 text-decoration-none">@chosenmaincat.Name</a>
+                        <span class="text-white"> > </span>
+                        <a href="/Forum?chosenSubId=@chosensubcat.Id" class="text-white py-1 mx-2 text-decoration-none">@chosensubcat.Name</a>
                         <article class="postcard dark-card text-white py-1 px-4 m-2">
                             <div class="postcard-text w-100">
-                                <h1 class="display-6 text-white">@Model.ChosenPost.Header</h1> 
+                                <h1 class="display-6 text-white">@Model.ChosenPost.Header</h1>
 
-                  
+
 
                                 <div class="row w-100">
                                     <div class="col-md-2">
@@ -269,8 +294,8 @@
                                         <div class="header-bar"></div>
                                         <p class="break-line">@Html.Raw(Model.ChosenPost.Text.Replace(Environment.NewLine, "<br />"))</p>
 
-@*                                        <p>@Model.ChosenPost.Text</p>
-*@
+                                        @*                                        <p>@Model.ChosenPost.Text</p>
+                                *@
                                         @if (Model.ChosenPost.ImageSrc != null && Model.ChosenPost.ImageSrc.Any())
                                         {
                                             <img class="post-image img-fluid" src="~/img/@Model.ChosenPost.ImageSrc" />
@@ -393,8 +418,8 @@
                         @*Post Threads*@
                         @{
                             var chosenPostThreads = Model.PostThreads.Where(p => p.PostId == Model.ChosenPost.Id).ToList();
-                            
-                            
+
+
                         }
                         @if (chosenPostThreads != null && chosenPostThreads.Any())
 
@@ -428,7 +453,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            
+
                                             <div class="col-md-10">
                                                 <p><i class="bi bi-calendar3"></i> @postthreaddate <span class="text-muted float-end">#@(Ptnumber + 2)</span></p>
                                                 <div class="header-bar"></div>
@@ -448,8 +473,8 @@
                                                 }
                                                 <p class="break-line">@Html.Raw(postthread.Text.Replace(Environment.NewLine, "<br />"))</p>
 
-@*                                                <p>@postthread.Text</p>
-*@                                                @if (postthread.ImageSrc != null && postthread.ImageSrc.Any())
+                                                @*                                                <p>@postthread.Text</p>
+                                *@                                                @if (postthread.ImageSrc != null && postthread.ImageSrc.Any())
                                                 {
                                                     <img class="post-image img-fluid" src="~/img/@postthread.ImageSrc" />
                                                 }
@@ -562,9 +587,9 @@
             <div class="container py-2">
                 <h1 class="text-center text-warning display-3">Diskussionsforum</h1>
                 <div class="header-bar mx-auto"></div>
-                <h2 class="text-center text-warning display-5">Huvudkategorier</h2>
+                <h2 class="text-center text-warning display-5 mb-4">Huvudkategorier</h2>
 
-               @foreach (var cat in Model.MainCategories)
+                @foreach (var cat in Model.MainCategories)
                 {
                     <article class="postcard dark-card text-white py-1 px-4 m-2">
                         <div class="postcard-text">
