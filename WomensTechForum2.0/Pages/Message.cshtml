@@ -1,4 +1,5 @@
 ﻿@page
+@using System.Globalization;
 @model WomensTechForum2._0.Pages.MessageModel
 @{
     //Areas.Identity.Data.WomensTechForum2_0User messagesender = null;
@@ -125,14 +126,14 @@
                             <tr>
                                 <td>@sender.FirstName @sender.LastName</td>
                                 <td><a asp-route-chosenMessageId="@mess.Id" class="lead text-decoration-none text-black">@mess.Title</a></td>
-
+                                @{CultureInfo swedishCulture = new CultureInfo("sv-SE");}
                                 @if (mess.DateTime.Value.Date == DateTime.Now.Date)
                                 {
-                                    <td>@mess.DateTime.Value.ToString("t")</td>
+                                    <td>@mess.DateTime.Value.ToString("t", swedishCulture)</td>
                                 }
                                 else
                                 {
-                                    <td>@mess.DateTime.Value.ToString("dd") @mess.DateTime.Value.ToString("MMMM")</td>
+                                    <td>@mess.DateTime.Value.ToString("dd", swedishCulture) @mess.DateTime.Value.ToString("MMMM", swedishCulture)</td>
                                 }
                                 <td><a class="text-black" asp-route-deleteId="@mess.Id"><i class="bi bi-trash" data-bs-toggle="tooltip" title="Ta bort"></i></a></td>
                             </tr>

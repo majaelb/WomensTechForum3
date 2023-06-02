@@ -16,8 +16,9 @@
     {
         <section class="bg-dark min-vh-100">
             <div class="p-2">
-                <h1 class="text-center text-warning display-3">Diskussionsforum</h1>
+                <h1 class="text-center text-warning">Diskussionsforum</h1>
                 <div class="header-bar mx-auto"></div>
+                <h2 class="text-center text-warning">@Model.ChosenMainCategory.Name</h2>
                 <div class="row">
                     <div class="col-md-2 text-center text-white">
                         <article class="menucard dark-card text-white hide-on-small-screen">
@@ -50,7 +51,7 @@
 
                         <article class="postcard dark-card text-white py-1 px-4 m-2">
                             <div class="postcard-text">
-                                <h1 class="display-6 postcard-header">@Model.ChosenMainCategory.Name </h1>
+                                <h2 class=" postcard-header">@Model.ChosenMainCategory.Name </h2>
                                 <div class="postcard-bar"></div>
                                 @if ((Model.SubCategories.Where(s => s.MainCategoryId == Model.ChosenMainCategory.Id)).Any())
                                 {
@@ -83,9 +84,9 @@
 
             <div class="p-2">
 
-                <h1 class="text-center text-warning display-3">Diskussionsforum</h1>
+                <h1 class="text-center text-warning">Diskussionsforum</h1>
                 <div class="header-bar mx-auto"></div>
-                <h1 class="text-center text-warning display-5">@chosenmaincat.Name - @Model.ChosenSubCategory.Name</h1>
+                <h2 class="text-center text-warning">@chosenmaincat.Name - @Model.ChosenSubCategory.Name</h2>
 
                 <div class="row">
                     <div class="col-md-2 text-center text-white">
@@ -194,7 +195,7 @@
 
                                     <div class="postcard-text">
 
-                                        <a class="text-decoration-none " asp-route-chosenPostId="@post.Id"><h1 class="display-6 postcard-header">@post.Header </h1></a>
+                                        <a class="text-decoration-none " asp-route-chosenPostId="@post.Id"><h2 class="postcard-header">@post.Header </h2></a>
                                         @{
                                             int timeSincePost = DateTime.Now.Date.DayOfYear - post.Date.Value.DayOfYear;
                                         }
@@ -210,7 +211,7 @@
                         }
                         else
                         {
-                            <p class="text-white p-1 m-2">Inga inlägg ännu...</p>
+                            <p class="text-white m-2">Inga inlägg ännu...</p>
                         }
                     </div>
                 </div>
@@ -228,9 +229,9 @@
 
         <section class="bg-dark min-vh-100">
             <div class=" p-2">
-                <h1 class="text-center text-warning display-3">Diskussionsforum</h1>
+                <h1 class="text-center text-warning">Diskussionsforum</h1>
                 <div class="header-bar mx-auto"></div>
-                <h1 class="text-center text-warning display-5">@chosenmaincat.Name - @chosensubcat.Name</h1>
+                <h2 class="text-center text-warning">@chosenmaincat.Name - @chosensubcat.Name</h2>
 
                 <div class="row">
                     <div class="col-md-2 text-center text-white">
@@ -268,7 +269,7 @@
                         <a href="/Forum?chosenSubId=@chosensubcat.Id" class="text-white py-1 mx-2 text-decoration-none">@chosensubcat.Name</a>
                         <article class="postcard dark-card text-white py-1 px-4 m-2">
                             <div class="postcard-text w-100">
-                                <h1 class="display-6 text-white">@Model.ChosenPost.Header</h1>
+                                <h2 class=" text-white">@Model.ChosenPost.Header</h2>
 
 
 
@@ -566,34 +567,17 @@
 
     else
     {
-        @*<section class="bg-dark text-light p-5 p-lg-0 pt-lg-5 text-center text-sm-start">
-            <div class="container py-2">
-                <div class="d-sm-flex align-items-center justify-content-between">
-                    <div>
-                        <h1>Välkommen till <span class="text-warning">ett forum för kvinnor i tech-branschen!</span></h1>
-                       @* <p class="lead my-4">
-                            Vi erbjuder de senaste nyheterna inom tech och intressanta diskussioner i våra forum
-                        </p>
-                        <br>
-                        <a class="btn btn-warning btn-lg" asp-area="Identity" asp-page="/Account/Register">
-                            Bli medlem här & delta i diskussionerna!
-                        </a>
-                    </div>
-                    <img class="img-fluid w-50 d-none d-sm-block" src="img/pairprogramming.svg" alt="">
-                </div>
-            </div>
-        </section>*@
         <section class="bg-dark min-vh-100">
             <div class="container py-2">
-                <h1 class="text-center text-warning display-3">Diskussionsforum</h1>
+                <h1 class="text-center text-warning">Diskussionsforum</h1>
                 <div class="header-bar mx-auto"></div>
-                <h2 class="text-center text-warning display-5 mb-4">Huvudkategorier</h2>
+                <h2 class="text-center text-warning mb-4">Huvudkategorier</h2>
 
                 @foreach (var cat in Model.MainCategories)
                 {
                     <article class="postcard dark-card text-white py-1 px-4 m-2">
                         <div class="postcard-text">
-                            <a class="text-decoration-none" asp-route-chosenMainId="@cat.Id"><h1 class="display-6 postcard-header">@cat.Name </h1></a>
+                            <a class="text-decoration-none" asp-route-chosenMainId="@cat.Id"><h2 class="postcard-header">@cat.Name </h2></a>
                             <div class="postcard-bar"></div>
                             @if ((Model.SubCategories.Where(s => s.MainCategoryId == cat.Id)).Any())
                             {
