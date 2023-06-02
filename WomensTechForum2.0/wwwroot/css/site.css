@@ -272,3 +272,14 @@ html {
 .postcard-text break-line {
     white-space: pre-wrap;
 }
+
+.header-scroll {
+    background-color: rgba(0, 0, 0, 0.66); /* Byt ut med önskad bakgrundsfärg */
+    transition: background-color 0.3s ease; /* Lägger till en övergångseffekt för mjukare ändringar */
+}
+
+@media (max-width: 1020px) {
+    #navbar-brand {
+        display: none;
+    }
+}

@@ -1,4 +1,6 @@
-﻿var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+﻿
+
+var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
 var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
     return new bootstrap.Popover(popoverTriggerEl)
 })
@@ -70,6 +72,29 @@ modalTriggerPTButtons.forEach(button => {
         myPTModal.show();
     });
 });
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    console.log("Nu körs scroll-funktionen");
+    var header = document.getElementById("main-header");
+    var scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+
+    function updateHeaderBackground() {
+        scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+
+        if (scrollPosition > 0) {
+            header.classList.add("bg-dark");
+            
+        } else {
+            header.classList.remove("bg-dark");
+        }
+    }
+
+    window.addEventListener("scroll", updateHeaderBackground);
+});
+
+
+
 
 
 //// Funktion för att gilla ett inlägg
