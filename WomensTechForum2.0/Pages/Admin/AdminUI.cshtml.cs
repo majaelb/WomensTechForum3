@@ -27,10 +27,12 @@ namespace WomensTechForum2._0.Pages.Admin
 
 
         private readonly Data.WomensTechForum2_0Context _context;
-        public AdminUIModel(Data.WomensTechForum2_0Context context, UserManager<WomensTechForum2_0User> userManager)
+        private readonly Helpers.AdminManager _adminManager;
+        public AdminUIModel(Data.WomensTechForum2_0Context context, UserManager<WomensTechForum2_0User> userManager, Helpers.AdminManager adminManager)
         {
             _context = context;
             _userManager = userManager;
+            _adminManager = adminManager;
         }
 
         public async Task<IActionResult> OnGetAsync(int changeMainCatId, int deleteMainCatId, int changeSubCatId, int deleteSubCatId)
@@ -48,36 +50,20 @@ namespace WomensTechForum2._0.Pages.Admin
             }
             if (deleteMainCatId != 0)
             {
-                Models.MainCategory mainCategory = await _context.MainCategory.FindAsync(deleteMainCatId);
-
-                if (mainCategory != null)
-                {
-
-                    _context.MainCategory.Remove(mainCategory); //ta bort inlägget
-                    await _context.SaveChangesAsync(); //Spara
-
-                    return RedirectToPage("./AdminUI");//Tillbaka till startsidan
-                }
+                await _adminManager.DeleteCategory<MainCategory>(deleteMainCatId);
+                return RedirectToPage("./AdminUI");
             }
 
             if (changeSubCatId != 0)
             {
                 NewSubCategory = SubCategories.FirstOrDefault(c => c.Id == changeSubCatId);
             }
+
             if (deleteSubCatId != 0)
             {
-                Models.SubCategory subCategory = await _context.SubCategory.FindAsync(deleteSubCatId);
-
-                if (subCategory != null)
-                {
-
-                    _context.SubCategory.Remove(subCategory); //ta bort inlägget
-                    await _context.SaveChangesAsync(); //Spara
-
-                    return RedirectToPage("./AdminUI");//Tillbaka till startsidan
-                }
+                await _adminManager.DeleteCategory<SubCategory>(deleteSubCatId);
+                return RedirectToPage("./AdminUI");
             }
-
 
             return Page();
 
@@ -87,9 +73,9 @@ namespace WomensTechForum2._0.Pages.Admin
         {
             if (NewMainCategory.Name != null && NewMainCategory.Id != null)
             {
-                await SaveCategory(NewMainCategory);
+                await _adminManager.SaveCategory(NewMainCategory);
             }
-            //await _context.SaveChangesAsync();
+
             return RedirectToPage("./AdminUI");
         }
 
@@ -97,42 +83,10 @@ namespace WomensTechForum2._0.Pages.Admin
         {
             if (NewSubCategory.Name != null && NewSubCategory.Description != null && NewSubCategory.MainCategoryId != null)
             {
-                await SaveSubCategory(NewSubCategory);
+                await _adminManager.SaveSubCategory(NewSubCategory);
             }
 
-            //await _context.SaveChangesAsync();
             return RedirectToPage("./AdminUI");
-        }
-
-        public async Task SaveCategory(MainCategory mainCategory)
-        {
-            var cat = _context.MainCategory.FirstOrDefault(c => c.Id == mainCategory.Id);
-
-            if (cat != null)
-            {
-                cat.Name = mainCategory.Name;
-            }
-            else
-            {
-                _context.Add(mainCategory);
-            }
-            await _context.SaveChangesAsync();
-        }
-        public async Task SaveSubCategory(SubCategory subCategory)
-        {
-            var cat = _context.SubCategory.FirstOrDefault(c => c.Id == subCategory.Id);
-
-            if (cat != null)
-            {
-                cat.Name = subCategory.Name;
-                cat.Description = subCategory.Description;
-                cat.MainCategoryId = subCategory.MainCategoryId;
-            }
-            else
-            {
-                _context.Add(subCategory);
-            }
-            await _context.SaveChangesAsync();
         }
     }
 }

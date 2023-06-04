@@ -16,7 +16,7 @@ namespace WomensTechForum2._0.Helpers
         private readonly Data.WomensTechForum2_0Context _context;
         public UserManager<WomensTechForum2_0User> _userManager;
         private readonly DateTimeOffset localTime = TimeZoneInfo.ConvertTime(DateTimeOffset.Now, TimeZoneInfo.FindSystemTimeZoneById("W. Europe Standard Time"));
-
+        private string url = "";
         public ForumManager(Data.WomensTechForum2_0Context context, UserManager<WomensTechForum2_0User> userManager)
         {
             _context = context;
@@ -84,8 +84,6 @@ namespace WomensTechForum2._0.Helpers
 
         public async Task<string> DeleteObject<T>(int objectId) where T : class
         {
-
-            string url = "";
             T obj = await _context.Set<T>().FindAsync(objectId);
 
             if (obj != null)
@@ -124,7 +122,6 @@ namespace WomensTechForum2._0.Helpers
 
         public async Task<string> LikeObject<T>(int objectId, string userId) where T : class, new()
         {
-            string url = "";
             T likeObject = new T();
             PropertyInfo objectIdProperty = typeof(T).GetProperty("PostId") ?? typeof(T).GetProperty("PostThreadId");
             PropertyInfo userIdProperty = typeof(T).GetProperty("UserId");
@@ -159,7 +156,6 @@ namespace WomensTechForum2._0.Helpers
         }
         public async Task<string> UnlikeObject<T>(int objectId, string userId) where T : class
         {
-            string url = "";
             int postId = 0;
 
             T likeObject = _context.Set<T>().AsEnumerable().FirstOrDefault(p => GetObjectId(p) == objectId && GetUserId(p) == userId);
@@ -210,7 +206,6 @@ namespace WomensTechForum2._0.Helpers
         public async Task<string> CreateNewPost(Models.Post NewPost, IFormFile UploadedImage, string UserId)
         {
             string fileName = string.Empty;
-            string url = "";
             if (UploadedImage != null)
             {
                 fileName = SetFileName(fileName, UploadedImage);
@@ -252,7 +247,7 @@ namespace WomensTechForum2._0.Helpers
                 await _context.SaveChangesAsync();
             }
 
-            string url = "./Forum?chosenPostId=" + NewPostThread.PostId.ToString();
+            url = "./Forum?chosenPostId=" + NewPostThread.PostId.ToString();
 
             return url;
         }

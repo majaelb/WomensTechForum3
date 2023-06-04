@@ -14,6 +14,7 @@ namespace WomensTechForum2._0
 
             builder.Services.AddDbContext<WomensTechForum2_0Context>(options => options.UseSqlServer(connectionString));
             builder.Services.AddTransient<ForumManager>();
+            builder.Services.AddTransient<AdminManager>();
 
             builder.Services.AddDefaultIdentity<Areas.Identity.Data.WomensTechForum2_0User>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddRoles<IdentityRole>()

@@ -41,6 +41,8 @@ namespace WomensTechForum2._0.Pages
         public List<PostThread> PostThreads { get; set; }
         public List<LikePost> LikedPosts { get; set; }
         public List<LikePostThread> LikedPostThreads { get; set; }
+        public List<Post> PostsSearch { get; set; }
+        public List<PostThread> PostThreadsSearch { get; set; }
 
         [BindProperty]
         public Post NewPost { get; set; }
@@ -50,6 +52,7 @@ namespace WomensTechForum2._0.Pages
 
         [BindProperty]
         public IFormFile UploadedImage { get; set; } //Läggs utanför databas-innehållet för att sparas som en sträng i db längre ner
+        
         private readonly DateTimeOffset localTime = TimeZoneInfo.ConvertTime(DateTimeOffset.Now, TimeZoneInfo.FindSystemTimeZoneById("W. Europe Standard Time"));
         private string url = "";
 
