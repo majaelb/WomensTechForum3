@@ -32,15 +32,15 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="cookieConsentModalLabel">Cookiepolicy</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+@*                    <button type="button" data-dismiss="modal">
                         <span aria-hidden="true">&times;</span>
-                    </button>
+                    </button>*@
                 </div>
                 <div class="modal-body">
-                    <p>VÄNLIGEN ACCEPTERA VÅR <a asp-page="/CookiePolicy">COOKIE POLICY</a>.</p>
+                    <p>Vänligen acceptera vår <a asp-page="/CookiePolicy" class="text-warning">Cookie policy</a>.</p>
                 </div>
                 <div class="modal-footer">
-                    <button id="acceptCookiesButton" type="button" class="btn btn-primary" data-cookie-string="@cookieStr">Acceptera cookies</button>
+                    <button id="acceptCookiesButton" type="button" class="btn btn-warning" data-cookie-string="@cookieStr">Acceptera cookies</button>
                 </div>
             </div>
         </div>
