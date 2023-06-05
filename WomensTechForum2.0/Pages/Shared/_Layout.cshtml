@@ -3,8 +3,9 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - WomensTechForum2._0</title>
+    <title>@ViewData["Title"] - Womens Tech Forum</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="shortcut icon" href="~/img/small-logowtf.png" type="image/x-icon" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css" />
     <link rel="stylesheet" href="~/WomensTechForum2._0.styles.css" asp-append-version="true" />
@@ -21,7 +22,8 @@
 
     <header id="main-header" class="@headerClass">
         <div class="container">
-            <a id="navbar-brand" class="navbar-brand" asp-area="" asp-page="/Index">Women's tech forum</a>
+            @*            <a id="navbar-brand" class="navbar-brand" asp-area="" asp-page="/Index">Women's tech forum</a>
+            *@            <a id="navbar-brand" asp-area="" asp-page="/Index"><img class="index-image" src="img/logo-wo-bg.png" /> </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -56,8 +58,8 @@
         @*min-vh-100*@
         <div class="container text-white">
             <div class="text-center  ">
-
-                <h1 class="display-4 m-5">ANMÄL DIG TILL VÅRT NYHETSBREV</h1>
+                <img src="img/logo-wo-bg.png" class="index-image mt-4"/>
+                <h1 class="display-4 m-5 mt-4">ANMÄL DIG TILL VÅRT NYHETSBREV</h1>
 
                 <input type="text" class="form-control w-50 mx-auto" placeholder="Ange din e-postadress" />
                 <input type="checkbox" class="my-3" /><label class="text-white my-3 mx-2 control-label"> Jag samtycker till att motta digital kommunikation enligt de allmänna villkoren.</label>

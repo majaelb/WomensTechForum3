@@ -14,7 +14,7 @@ namespace WomensTechForum2._0.DAL
             var newsAPIClient = new NewsApiClient("bbe6005d1e2d430290087505dabf9b4d");
             var articleResponse = newsAPIClient.GetEverything(new NewsAPI.Models.EverythingRequest
             {
-                Q = "code AND IT AND tech",
+                Q = "code OR IT OR tech",
                 Language = Languages.EN,
                 PageSize = 6
             });

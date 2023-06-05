@@ -283,3 +283,8 @@ html {
         display: none;
     }
 }
+
+.index-image{
+    width:13em;
+    margin-right:10px;
+}
