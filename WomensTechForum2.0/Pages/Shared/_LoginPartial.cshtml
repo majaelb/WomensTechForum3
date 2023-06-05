@@ -60,9 +60,10 @@
     {
         <li class="nav-item dropdown">
             <a class="nav-link text-white" data-bs-toggle="dropdown"><i class="bi bi-search"></i></a>
-            <ul class="dropdown-menu">
-                <form method="get" asp-page="/Forum">
-                    <input type="text" asp-for="SearchString"/>
+            <ul class="dropdown-menu p-4">
+                <form method="get" asp-page="/Search">
+                    <input type="text" name="searchString" placeholder="Sök efter inlägg..."/>
+                    <button type="submit">Sök</button>
                     </form>
             </ul>
         </li>

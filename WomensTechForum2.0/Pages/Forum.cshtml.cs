@@ -41,10 +41,7 @@ namespace WomensTechForum2._0.Pages
         public List<PostThread> PostThreads { get; set; }
         public List<LikePost> LikedPosts { get; set; }
         public List<LikePostThread> LikedPostThreads { get; set; }
-        public List<Post> PostsSearch { get; set; }
-        public List<PostThread> PostThreadsSearch { get; set; }
-        [BindProperty(SupportsGet = true)]
-        public string? SearchString { get; set; }
+
 
         [BindProperty]
         public Post NewPost { get; set; }
@@ -163,6 +160,14 @@ namespace WomensTechForum2._0.Pages
 
             return Page();
         }
+        //public async Task<IActionResult> OnGetSearch(string searchString)
+        //{
+        //    PostsSearch = await _context.Post.Where(p => p.Header.Contains(searchString) || p.Text.Contains(searchString)).ToListAsync();
+        //    PostThreadsSearch = await _context.PostThread.Where(p => p.Text.Contains(searchString)).ToListAsync();
+        //    SubCategoriesSearch = await _context.SubCategory.Where(p => p.Name.Contains(searchString)).ToListAsync();
+
+        //    return Page();
+        //}
 
         public async Task<IActionResult> OnPostNewPostAsync()
         {
