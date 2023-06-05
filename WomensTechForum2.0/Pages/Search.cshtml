@@ -1,4 +1,56 @@
 ﻿@page
+@using Helpers
 @model WomensTechForum2._0.Pages.SearchModel
 @{
+    //int resultCount = 0;
 }
+<section class="bg-dark min-vh-100">
+    <div class="container py-2">
+        <h1 class="text-center text-warning">Diskussionsforum</h1>
+        <div class="header-bar mx-auto"></div>
+        <h2 class="text-center text-warning mb-4">Sökresultat</h2>
+        @{int resultCount = @Model.PostsSearch.Count + @Model.PostThreadsSearch.Count + @Model.SubCategoriesSearch.Count;}
+        <p class=" py-1 px-4 m-2 text-muted small">@resultCount träffar</p>
+
+        @if (Model.PostsSearch != null)
+        {
+            @foreach (var result in Model.PostsSearch)
+            {
+                <article class="postcard dark-card text-white py-1 px-4 m-2">
+                    <div class="postcard-text">
+                        <a class="text-decoration-none" href="/Forum?chosenPostId=@result.Id"><h4 class="postcard-header">@result.Header</h4></a>
+                        <p>@result.Text.LimitLength(200)</p>
+                    </div>
+
+                </article>
+            }
+        }
+        @if (Model.PostThreadsSearch != null)
+        {
+
+            @foreach (var result in Model.PostThreadsSearch)
+            {
+                var originalPost = Model.Posts.FirstOrDefault(p => p.Id == result.PostId);
+                <article class="postcard dark-card text-white py-1 px-4 m-2">
+                    <div class="postcard-text">
+                        <a class="text-decoration-none" href="/Forum?chosenPostId=@originalPost.Id#@result.Id"><h4 class="postcard-header">@originalPost.Header</h4></a>
+                        <p>@result.Text.LimitLength(200)</p>
+                </div>
+                </article>
+            }
+        }
+        @if (Model.SubCategoriesSearch != null)
+        {
+
+            @foreach (var result in Model.SubCategoriesSearch)
+            {
+                <article class="postcard dark-card text-white py-1 px-4 m-2">
+                    <div class="postcard-text">
+                        <a class="text-decoration-none" href="/Forum?chosenSubId=@result.Id"><h4 class="postcard-header">@result.Name</h4></a>
+                        <p>@result.Description.LimitLength(200)</p>
+                    </div>
+                </article>
+            }
+        }
+    </div>
+</section>

@@ -17,6 +17,7 @@ namespace WomensTechForum2._0.Pages
             _context = context;
   
         }
+        public List<Post> Posts { get; set; }
         public List<Post> PostsSearch { get; set; }
         public List<PostThread> PostThreadsSearch { get; set; }
         public List<SubCategory> SubCategoriesSearch { get; set; }
@@ -24,7 +25,7 @@ namespace WomensTechForum2._0.Pages
         public string? SearchString { get; set; }
         public async Task<IActionResult> OnGet(string searchString)
         {
-
+            Posts = await _context.Post.ToListAsync();
             PostsSearch = await _context.Post.Where(p => p.Header.Contains(searchString) || p.Text.Contains(searchString)).ToListAsync();
             PostThreadsSearch = await _context.PostThread.Where(p => p.Text.Contains(searchString)).ToListAsync();
             SubCategoriesSearch = await _context.SubCategory.Where(p => p.Name.Contains(searchString) || p.Description.Contains(searchString)).ToListAsync();

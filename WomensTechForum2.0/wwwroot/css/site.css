@@ -16,7 +16,9 @@ html {
     position: relative;
     min-height: 100%;
 }
-
+.search-icon:hover{
+    cursor: pointer;
+}
 .register-link {
     color: white;
 }
