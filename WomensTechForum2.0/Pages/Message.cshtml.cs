@@ -20,12 +20,17 @@ namespace WomensTechForum2._0.Pages
         [BindProperty]
         public Message ChosenMessage { get; set; }
 
+        [BindProperty]
+        public bool ShowSentMessages { get; set; } = false;
+        [BindProperty]
+        public bool ShowIncomingMessages { get; set; } = true;
+
         public MessageModel(UserManager<WomensTechForum2_0User> userManager)
         {
             _userManager = userManager;
         }
 
-        public async Task<IActionResult> OnGetAsync(int chosenMessageId, int deleteId, int deletemsgId)
+        public async Task<IActionResult> OnGetAsync(int chosenMessageId, int deleteId, int deletemsgId, int showSentMsgId)
         {
             ViewData["ReceiverId"] = new SelectList(_userManager.Users, "Id", "FirstName");
 
@@ -50,6 +55,11 @@ namespace WomensTechForum2._0.Pages
             {
                 await DAL.MessageManager.DeleteMessage(deletemsgId);
                 Messages = await DAL.MessageManager.GetAllMessages();
+            }
+            if (showSentMsgId != 0)
+            {
+                ShowIncomingMessages = false;
+                ShowSentMessages = true;
             }
 
             return Page();
