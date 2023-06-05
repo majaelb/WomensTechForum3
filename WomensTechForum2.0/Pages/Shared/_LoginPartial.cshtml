@@ -1,6 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using WomensTechForum2._0.Areas.Identity.Data
-
+@using Pages
 @inject SignInManager<WomensTechForum2_0User> SignInManager
 @inject UserManager<WomensTechForum2_0User> UserManager
 @{
@@ -33,6 +33,9 @@
         <li class="nav-item">
             <a id="manage" class="nav-link text-white" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hej @UserManager.GetUserName(User)!</a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link text-white" asp-area="" asp-page="#"><i class="bi bi-search"></i></a>
+        </li>
         @if (unreadMessages > 0)
         {
 
@@ -55,6 +58,14 @@
     }
     else
     {
+        <li class="nav-item dropdown">
+            <a class="nav-link text-white" data-bs-toggle="dropdown"><i class="bi bi-search"></i></a>
+            <ul class="dropdown-menu">
+                <form method="get" asp-page="/Forum">
+                    <input type="text" asp-for="SearchString"/>
+                    </form>
+            </ul>
+        </li>
         <li class="nav-item">
             <a class="nav-link text-white" id="register" asp-area="Identity" asp-page="/Account/Register">Registrera</a>
         </li>

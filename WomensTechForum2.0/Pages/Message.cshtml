@@ -26,7 +26,7 @@
             if (Model.ChosenMessage != null)
             {
                 var messagesender = Model.Users.FirstOrDefault(u => u.Id == @Model.ChosenMessage.SenderId);
-                <div class="card message-card">
+                <div class="card message-card my-4">
                     <p class="lead card-header">
                         @Model.ChosenMessage.Title
                     </p>
@@ -38,8 +38,8 @@
 
                     </div>
 
-
-                    <p class="p-2">@Model.ChosenMessage.TextMessage</p>
+                    <p class="p-2">@Html.Raw(@Model.ChosenMessage.TextMessage.Replace(Environment.NewLine, "<br />"))</p>
+                    @*<p class="p-2">@Model.ChosenMessage.TextMessage</p>*@
                 </div>
 
                 <!--MODAL answer message-->
@@ -99,7 +99,7 @@
             }
             else
             {
-                <table class="table table-hover">
+                <table class="table table-hover my-4">
                     @foreach (var mess in Model.Messages.Where(m => m.ReceiverId == Model.CurrentUser.Id).OrderByDescending(m => m.DateTime))
                     {
                         var sender = Model.Users.FirstOrDefault(u => u.Id == @mess.SenderId);

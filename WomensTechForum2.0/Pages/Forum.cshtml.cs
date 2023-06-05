@@ -43,6 +43,8 @@ namespace WomensTechForum2._0.Pages
         public List<LikePostThread> LikedPostThreads { get; set; }
         public List<Post> PostsSearch { get; set; }
         public List<PostThread> PostThreadsSearch { get; set; }
+        [BindProperty(SupportsGet = true)]
+        public string? SearchString { get; set; }
 
         [BindProperty]
         public Post NewPost { get; set; }
