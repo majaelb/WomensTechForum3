@@ -32,8 +32,15 @@ namespace WomensTechForum2._0
                 options.Conventions.AuthorizeFolder("/AdminScaffold", "AdminRequired");
             });
 
+            builder.Services.Configure<CookiePolicyOptions>(options =>
+            {
+                options.CheckConsentNeeded = context => true;
+                options.MinimumSameSitePolicy = SameSiteMode.None;
+            });
+
             var app = builder.Build();
 
+            app.UseCookiePolicy();
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {
