@@ -8,14 +8,18 @@ namespace WomensTechForum2._0.DAL
 {
     public class NewsManager
     {
+        
         public static async Task<List<NewsAPI.Models.Article>> GetNews()
         {
+            
             List<NewsAPI.Models.Article> news = new();
             var newsAPIClient = new NewsApiClient("bbe6005d1e2d430290087505dabf9b4d");
             var articleResponse = newsAPIClient.GetEverything(new NewsAPI.Models.EverythingRequest
             {
-                Q = "code OR IT OR tech",
+                Q = "tech OR AI",
                 Language = Languages.EN,
+                //SortBy = SortBys.Relevancy,
+                //SortBy = SortBys.PublishedAt,
                 PageSize = 6
             });
             if (articleResponse.Status == Statuses.Ok)

@@ -37,7 +37,7 @@
                 <table class="table table-hover my-4">
                     @foreach (var mess in Model.Messages.Where(m => m.SenderId == Model.CurrentUser.Id).OrderByDescending(m => m.DateTime))
                     {
-  @*                      CultureInfo swedishCulture = new CultureInfo("sv-SE");*@
+                        @*                      CultureInfo swedishCulture = new CultureInfo("sv-SE");*@
                         var receiver = Model.Users.FirstOrDefault(u => u.Id == @mess.ReceiverId);
 
                         <tr>
@@ -149,7 +149,7 @@
                     <table class="table table-hover my-4">
                         @foreach (var mess in Model.Messages.Where(m => m.ReceiverId == Model.CurrentUser.Id).OrderByDescending(m => m.DateTime))
                         {
-                            @*CultureInfo swedishCulture = new CultureInfo("sv-SE");*@
+
                             var sender = Model.Users.FirstOrDefault(u => u.Id == @mess.SenderId);
                             @if (mess.IsRead == false)
                             {
@@ -174,8 +174,7 @@
                                 <tr>
                                     <td>@sender.FirstName @sender.LastName</td>
                                     <td><a asp-route-chosenMessageId="@mess.Id" class="lead text-decoration-none text-black">@mess.Title</a></td>
-                                    @*                                @{CultureInfo swedishCulture = new CultureInfo("sv-SE");}
-            *@                                @if (mess.DateTime.Value.Date == DateTime.Now.Date)
+                                    @if (mess.DateTime.Value.Date == DateTime.Now.Date)
                                     {
                                         <td>@mess.DateTime.Value.ToString("t", swedishCulture)</td>
                                     }
@@ -243,12 +242,12 @@
 </div>
 
 
-<!--MODAL answer message-->
+@*<!--MODAL answer message-->
 <div class="modal fade" id="answermessage" tabindex="-1" aria-labelledby="answermessageLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="answermessageLabel">Svara @*@messagesender.FirstName @messagesender.LastName*@</h1>
+                <h1 class="modal-title fs-5" id="answermessageLabel">Svara @messagesender.FirstName @messagesender.LastName</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -282,4 +281,4 @@
             </div>
         </div>
     </div>
-</div>
+</div>*@
